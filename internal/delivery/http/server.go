@@ -3,20 +3,35 @@ package http
 import (
 	"net/http"
 
-	"skeleton/pkg/grace"
+	"sekretariat/pkg/grace"
 
 	"github.com/rs/cors"
 )
 
-// SkeletonHandler ...
-type SkeletonHandler interface {
-	// Masukkan fungsi handler di sini
-	GetSkeleton(w http.ResponseWriter, r *http.Request)
+type SekretariatHandler interface {
+	// Contract
+	GetAllContractsHeader(w http.ResponseWriter, r *http.Request)
+	GetDataContractByContractNumber(w http.ResponseWriter, r *http.Request)
+	GetCounterContract(w http.ResponseWriter, r *http.Request)
+
+	CreateContract(w http.ResponseWriter, r *http.Request)
+	PrintKontrak(w http.ResponseWriter, r *http.Request)
+
+	// Company
+	GetAllCompanies(w http.ResponseWriter, r *http.Request)
+
+	// Customer
+	GetCustomerFiltered(w http.ResponseWriter, r *http.Request)
+	CreateCustomer(w http.ResponseWriter, r *http.Request)
+	UpdateCustomer(w http.ResponseWriter, r *http.Request)
+
+	// Bank
+	GetAllBanks(w http.ResponseWriter, r *http.Request)
 }
 
 // Server ...
 type Server struct {
-	Skeleton SkeletonHandler
+	Sekretariat SekretariatHandler
 }
 
 // Serve is serving HTTP gracefully on port x ...

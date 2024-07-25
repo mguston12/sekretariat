@@ -1,4 +1,0 @@
-server:
-    port: ":8080"
-database:
-    master: "root:Admin#1234!@tcp(127.0.0.1:3306)/kontrak?parseTime=true"

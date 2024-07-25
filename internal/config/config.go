@@ -51,21 +51,21 @@ func WithConfigFile(file string) Option {
 
 func getDefaultConfigFile() string {
 	var (
-		repoPath     = filepath.Join(os.Getenv("GOPATH"), "src/skeleton")
-		configPath   = filepath.Join(repoPath, "files/etc/skeleton/skeleton.development.yaml")
+		repoPath     = filepath.Join(os.Getenv("GOPATH"), "src/sekretariat")
+		configPath   = filepath.Join(repoPath, "files/etc/sekretariat/sekretariat.development.yaml")
 		namespace, _ = ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
 	)
 
 	env := string(namespace)
 	if os.Getenv("GOPATH") == "" {
-		configPath = "./skeleton.development.yaml"
+		configPath = "./sekretariat.development.yaml"
 	}
 
 	if env != "" {
 		if env == envStaging {
-			configPath = "./skeleton.staging.yaml"
+			configPath = "./sekretariat.staging.yaml"
 		} else if env == envProduction {
-			configPath = "./skeleton.production.yaml"
+			configPath = "./sekretariat.production.yaml"
 		}
 	}
 	return configPath

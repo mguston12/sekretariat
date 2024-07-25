@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"skeleton/internal/boot"
+	"sekretariat/internal/boot"
 
 	_ "github.com/go-sql-driver/mysql"
 )

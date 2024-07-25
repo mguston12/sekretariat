@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"skeleton/pkg/response"
+	"sekretariat/pkg/response"
 
 	"github.com/gorilla/mux"
 )
@@ -21,7 +21,26 @@ func (s *Server) Handler() *mux.Router {
 	router.HandleFunc("", defaultHandler).Methods("GET")
 	router.HandleFunc("/", defaultHandler).Methods("GET")
 	// Routes
-	router.HandleFunc("/logbook", s.Skeleton.GetSkeleton).Methods("GET")
+	// router.HandleFunc("/contracts", s.Sekretariat.GetContractFiltered).Methods("GET")
+
+	contract := r.PathPrefix("/contracts").Subrouter()
+
+	contract.HandleFunc("/detail", s.Sekretariat.GetDataContractByContractNumber).Methods("GET")
+	contract.HandleFunc("/create", s.Sekretariat.CreateContract).Methods("POST")
+	contract.HandleFunc("/print", s.Sekretariat.PrintKontrak).Methods("GET")
+	contract.HandleFunc("/counter", s.Sekretariat.GetCounterContract).Methods("GET")
+	contract.HandleFunc("", s.Sekretariat.GetAllContractsHeader).Methods("GET")
+
+	customer := r.PathPrefix("/customers").Subrouter()
+	customer.HandleFunc("/create", s.Sekretariat.CreateCustomer).Methods("POST")
+	customer.HandleFunc("/update", s.Sekretariat.UpdateCustomer).Methods("PUT")
+	customer.HandleFunc("", s.Sekretariat.GetCustomerFiltered).Methods("GET")
+
+	company := r.PathPrefix("/companies").Subrouter()
+	company.HandleFunc("", s.Sekretariat.GetAllCompanies).Methods("GET")
+
+	bank := r.PathPrefix("/banks").Subrouter()
+	bank.HandleFunc("", s.Sekretariat.GetAllBanks).Methods("GET")
 
 	return r
 }

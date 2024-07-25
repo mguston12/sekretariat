@@ -4,14 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	"skeleton/internal/config"
+	"sekretariat/internal/config"
 
 	"github.com/jmoiron/sqlx"
 
-	skeletonData "skeleton/internal/data/skeleton"
-	skeletonServer "skeleton/internal/delivery/http"
-	skeletonHandler "skeleton/internal/delivery/http/skeleton"
-	skeletonService "skeleton/internal/service/skeleton"
+	sekretariatData "sekretariat/internal/data/sekretariat"
+	sekretariatServer "sekretariat/internal/delivery/http"
+	sekretariatHandler "sekretariat/internal/delivery/http/sekretariat"
+	sekretariatService "sekretariat/internal/service/sekretariat"
 )
 
 // HTTP will load configuration, do dependency injection and then start the HTTP server
@@ -29,12 +29,12 @@ func HTTP() error {
 	}
 
 	// Diganti dengan domain yang anda buat
-	sd := skeletonData.New(db)
-	ss := skeletonService.New(sd)
-	sh := skeletonHandler.New(ss)
+	sd := sekretariatData.New(db)
+	ss := sekretariatService.New(sd)
+	sh := sekretariatHandler.New(ss)
 
-	server := skeletonServer.Server{
-		Skeleton: sh,
+	server := sekretariatServer.Server{
+		Sekretariat: sh,
 	}
 
 	if err := server.Serve(cfg.Server.Port); err != http.ErrServerClosed {
