@@ -1,4 +1,4 @@
 server:
     port: ":8080"
 database:
-    master: "root:Admin#1234!@tcp(127.0.0.1:3306)/sys?parseTime=true"
+    master: "root:Admin#1234!@tcp(192.168.88.70:3306)/sys?parseTime=true"
