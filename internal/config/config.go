@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -31,7 +30,7 @@ func Init(opts ...Option) error {
 		optFunc(opt)
 	}
 
-	out, err := ioutil.ReadFile(opt.configFile)
+	out, err := os.ReadFile(opt.configFile)
 	if err != nil {
 		return err
 	}
@@ -53,7 +52,7 @@ func getDefaultConfigFile() string {
 	var (
 		repoPath     = filepath.Join(os.Getenv("GOPATH"), "src/sekretariat")
 		configPath   = filepath.Join(repoPath, "files/etc/sekretariat/sekretariat.development.yaml")
-		namespace, _ = ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
+		namespace, _ = os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
 	)
 
 	env := string(namespace)
