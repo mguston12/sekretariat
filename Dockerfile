@@ -5,7 +5,6 @@ FROM golang:alpine AS builder
 RUN apk add --no-cache git make bash
 
 # Create and set working directory
-RUN mkdir -p /go/src/sekretariat
 WORKDIR /go/src/sekretariat
 
 # Copy source code and build
@@ -26,7 +25,8 @@ EXPOSE 8080
 
 # Copy the built binary and other necessary files
 COPY --from=builder /go/src/sekretariat/bin/sekretariat /sekretariat
-COPY --from=builder /go/src/sekretariat/files/etc/sekretariat /etc/sekretariat
+# Place the file in the root directory
+COPY --from=builder /go/src/sekretariat/files/etc/sekretariat/sekretariat.development.yaml /sekretariat.development.yaml
 
 # Set the entrypoint
 ENTRYPOINT ["/sekretariat"]
