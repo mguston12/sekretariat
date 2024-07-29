@@ -4,7 +4,7 @@ stages:
 
 variables:
   DOCKER_REGISTRY: registry.gitlab.com
-  DOCKER_IMAGE: $DOCKER_REGISTRY/your-namespace/your-project
+  DOCKER_IMAGE: $DOCKER_REGISTRY/pb-pbm-mmu/sekretariat
   DOCKER_TAG: $CI_COMMIT_REF_SLUG
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
