@@ -9,7 +9,6 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-# Build Docker image
 build:
   stage: build
   image: docker:latest
@@ -24,7 +23,6 @@ build:
     - main
     - tags
 
-# Push Docker image to GitLab Container Registry
 deploy:
   stage: deploy
   image: docker:latest
@@ -35,7 +33,7 @@ deploy:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
     - echo "Pushing Docker image..."
     - docker push $DOCKER_IMAGE:$DOCKER_TAG
-    - echo "Docker images in the current context:"
+    - echo "Docker images before push:"
     - docker images
   only:
     - main
