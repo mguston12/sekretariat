@@ -21,6 +21,10 @@ deploy:
     - docker:dind
   script:
     - echo "Deploying..."
-    - echo "Done"
+    - docker-compose up -d
+    - echo "Waiting for backend to start..."
+    - sleep 30  # Wait for the backend to start up
+    - curl -f http://sekretariat-api/contracts || exit 1  # Exit with error if health check fails
+    - echo "Deployment complete"
   only:
     - main
