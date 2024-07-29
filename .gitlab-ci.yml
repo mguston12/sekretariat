@@ -16,7 +16,10 @@ build:
   services:
     - docker:dind
   script:
+    - echo "Building Docker image..."
     - docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
+    - echo "Docker images after build:"
+    - docker images
   only:
     - main
     - tags
@@ -28,8 +31,12 @@ deploy:
   services:
     - docker:dind
   script:
+    - echo "Logging in to Docker registry..."
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+    - echo "Pushing Docker image..."
     - docker push $DOCKER_IMAGE:$DOCKER_TAG
+    - echo "Docker images in the current context:"
+    - docker images
   only:
     - main
     - tags
