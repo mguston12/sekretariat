@@ -1,1 +1,1 @@
-# Go Project Layout Skeleton
+# sekretariat
