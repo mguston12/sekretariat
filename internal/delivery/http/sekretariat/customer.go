@@ -2,7 +2,6 @@ package sekretariat
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	httpHelper "sekretariat/internal/delivery/http"
@@ -33,7 +32,6 @@ func (h *Handler) GetCustomerFiltered(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[ERROR][%s][%s] %s | Reason: %s", r.RemoteAddr, r.Method, r.URL, err.Error())
 		return
 	}
-	fmt.Println(metadata)
 
 	resp.Data = result
 	resp.Metadata = metadata
