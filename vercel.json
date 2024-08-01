@@ -4,7 +4,7 @@
       { "src": "cmd/http/main.go", "use": "@vercel/go" }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "/cmd/http/main.go" }
+      { "src": "/(.*)", "dest": "./cmd/http/main.go" }
     ]
   }
   
