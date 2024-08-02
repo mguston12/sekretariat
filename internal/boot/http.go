@@ -3,6 +3,7 @@ package boot
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"sekretariat/internal/config"
 
@@ -14,7 +15,7 @@ import (
 	sekretariatService "sekretariat/internal/service/sekretariat"
 )
 
-// HTTP will load configuration, do dependency injection and then start the HTTP server
+// HTTP will load configuration, do dependency injection, and then start the HTTP server
 func HTTP() error {
 	err := config.Init()
 	if err != nil {
@@ -27,7 +28,7 @@ func HTTP() error {
 		log.Fatalf("[DB] Failed to initialize database connection: %v", err)
 	}
 
-	// Diganti dengan domain yang anda buat
+	// Dependency Injection
 	sd := sekretariatData.New(db)
 	ss := sekretariatService.New(sd)
 	sh := sekretariatHandler.New(ss)
@@ -36,7 +37,12 @@ func HTTP() error {
 		Sekretariat: sh,
 	}
 
-	if err := server.Serve(cfg.Server.Port); err != http.ErrServerClosed {
+	// Use the PORT environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port
+	}
+	if err := server.Serve(":" + port); err != http.ErrServerClosed {
 		return err
 	}
 
