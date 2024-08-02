@@ -16,7 +16,6 @@ import (
 
 // HTTP will load configuration, do dependency injection and then start the HTTP server
 func HTTP() error {
-
 	err := config.Init()
 	if err != nil {
 		log.Fatalf("[CONFIG] Failed to initialize config: %v", err)
