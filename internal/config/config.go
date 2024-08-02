@@ -21,7 +21,7 @@ type option struct {
 	configFile string
 }
 
-// Init initializes the configuration by reading environment variables or a file
+// Init ...
 func Init(opts ...Option) error {
 	opt := &option{
 		configFile: getDefaultConfigFile(),
@@ -30,20 +30,6 @@ func Init(opts ...Option) error {
 		optFunc(opt)
 	}
 
-	// Check if environment variables are set
-	if os.Getenv("DATABASE_URL") != "" {
-		config = &Config{
-			Server: ServerConfig{
-				Port: os.Getenv("PORT"),
-			},
-			Database: DatabaseConfig{
-				Master: os.Getenv("DATABASE_URL"),
-			},
-		}
-		return nil
-	}
-
-	// Otherwise, read from the config file
 	out, err := os.ReadFile(opt.configFile)
 	if err != nil {
 		return err
@@ -52,10 +38,10 @@ func Init(opts ...Option) error {
 	return yaml.Unmarshal(out, &config)
 }
 
-// Option defines a functional option for the configuration
+// Option ...
 type Option func(*option)
 
-// WithConfigFile allows specifying a custom configuration file
+// WithConfigFile ...
 func WithConfigFile(file string) Option {
 	return func(opt *option) {
 		opt.configFile = file
@@ -63,24 +49,28 @@ func WithConfigFile(file string) Option {
 }
 
 func getDefaultConfigFile() string {
-	if os.Getenv("GOPATH") == "" {
-		return "./sekretariat.development.yaml"
-	}
+	var (
+		repoPath     = filepath.Join(os.Getenv("GOPATH"), "src/sekretariat")
+		configPath   = filepath.Join(repoPath, "files/etc/sekretariat/sekretariat.development.yaml")
+		namespace, _ = os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
+	)
 
-	namespace, _ := os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
 	env := string(namespace)
-
-	switch env {
-	case envStaging:
-		return "./sekretariat.staging.yaml"
-	case envProduction:
-		return "./sekretariat.production.yaml"
-	default:
-		return "./sekretariat.development.yaml"
+	if os.Getenv("GOPATH") == "" {
+		configPath = "./sekretariat.development.yaml"
 	}
+
+	if env != "" {
+		if env == envStaging {
+			configPath = "./sekretariat.staging.yaml"
+		} else if env == envProduction {
+			configPath = "./sekretariat.production.yaml"
+		}
+	}
+	return configPath
 }
 
-// Get returns the current configuration
+// Get ...
 func Get() *Config {
 	return config
 }
