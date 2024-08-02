@@ -13,19 +13,26 @@ func (s Service) GetCustomerFiltered(ctx context.Context, company int, keyword s
 	offset := (page - 1) * length
 	var lastPage int
 
-	customers, count, err := s.data.GetCustomerFilteredCount(ctx, company, keyword)
-	if err != nil {
-		return customers, lastPage, errors.Wrap(err, "[SERVICE][GetCustomerFiltered][COUNT]")
+	if page != 0 && length != 0 {
+		customers, count, err := s.data.GetCustomerFilteredCount(ctx, company, keyword)
+		if err != nil {
+			return customers, lastPage, errors.Wrap(err, "[SERVICE][GetCustomerFiltered][COUNT]")
 
+		}
+		lastPage = int(math.Ceil(float64(count) / float64(length)))
+
+		customers, err = s.data.GetCustomerFiltered(ctx, company, keyword, offset, limit)
+		if err != nil {
+			return customers, lastPage, errors.Wrap(err, "[SERVICE][GetCustomerFiltered]")
+		}
+
+		return customers, lastPage, nil
 	}
-	lastPage = int(math.Ceil(float64(count) / float64(length)))
 
-	customers, err = s.data.GetCustomerFiltered(ctx, company, keyword, offset, limit)
+	customers, err := s.data.GetAllCustomers(ctx, company)
 	if err != nil {
 		return customers, lastPage, errors.Wrap(err, "[SERVICE][GetCustomerFiltered]")
 	}
-
-	fmt.Println(lastPage)
 
 	return customers, lastPage, nil
 }

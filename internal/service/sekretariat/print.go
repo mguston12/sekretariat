@@ -39,14 +39,11 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.AddPage()
 
 	pdf.SetXY(25, 25)
-	pdf.SetFont("times", "B", 11)
 
 	pdf.SetFont("times", "B", 11)
 	initialY := pdf.GetY()
 	pdf.Text(74, initialY+5, "PERJANJIAN SEWA MENYEWA")
 	pdf.Text(70, initialY+9, "MESIN PRINTER MULTIFUNCTION")
-
-	// pdf.Text(75, initialY+13, "Nomor: SPK. "+kontrak.NoKontrak)
 
 	pdf.SetXY(53, initialY+9)
 	paragraphWidth := 100.0

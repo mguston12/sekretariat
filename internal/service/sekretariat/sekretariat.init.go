@@ -21,6 +21,7 @@ type Data interface {
 	IncreaseCounterContract(ctx context.Context, company int) error
 
 	// Customer
+	GetAllCustomers(ctx context.Context, company int) ([]sekretariat.Customer, error)
 	GetCustomerFiltered(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.Customer, error)
 	GetCustomerFilteredCount(ctx context.Context, company int, keyword string) ([]sekretariat.Customer, int, error)
 	CreateCustomer(ctx context.Context, customer sekretariat.Customer) error
