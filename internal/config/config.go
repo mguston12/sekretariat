@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
@@ -49,25 +48,21 @@ func WithConfigFile(file string) Option {
 }
 
 func getDefaultConfigFile() string {
-	var (
-		repoPath     = filepath.Join(os.Getenv("GOPATH"), "src/sekretariat")
-		configPath   = filepath.Join(repoPath, "files/etc/sekretariat/sekretariat.development.yaml")
-		namespace, _ = os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
-	)
-
-	env := string(namespace)
-	if os.Getenv("GOPATH") == "" {
-		configPath = "./sekretariat.development.yaml"
+	env := os.Getenv("ENVIRONMENT") // Example: "development", "staging", "production"
+	if env == "" {
+		env = envDevelopment // Default environment
 	}
 
-	if env != "" {
-		if env == envStaging {
-			configPath = "./sekretariat.staging.yaml"
-		} else if env == envProduction {
-			configPath = "./sekretariat.production.yaml"
-		}
+	var configFile string
+	switch env {
+	case envStaging:
+		configFile = "./sekretariat.staging.yaml"
+	case envProduction:
+		configFile = "./sekretariat.production.yaml"
+	default:
+		configFile = "./sekretariat.development.yaml"
 	}
-	return configPath
+	return configFile
 }
 
 // Get ...
