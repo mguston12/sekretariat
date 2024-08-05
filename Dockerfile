@@ -20,13 +20,13 @@ RUN apk add --no-cache ca-certificates tzdata
 # Set timezone
 ENV TZ=Asia/Jakarta
 
-# Expose the port
+# Expose the port that Heroku uses
 EXPOSE 8080
 
 # Copy the built binary and configuration files
-COPY --from=builder /go/src/sekretariat/bin/sekretariat /sekretariat
+COPY --from=builder /go/src/sekretariat/bin/http /bin/http
 RUN mkdir -p /files/etc/sekretariat
 COPY --from=builder /go/src/sekretariat/files/etc/sekretariat/sekretariat.development.yaml /files/etc/sekretariat/sekretariat.development.yaml
 
-# Set the entrypoint
-ENTRYPOINT ["/sekretariat"]
+# Set the command to run the application
+CMD ["/bin/http"]
