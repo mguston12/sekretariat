@@ -59,9 +59,9 @@ const (
 	qGetContractHeaderByContractNumber = `SELECT no_kontrak, tanggal_buat, kh.company_id, kh.id_customer,
 											cu.nama_customer, cu.alamat, cu.pic, cu.penandatangan, cu.jabatan, cu.no_telp,
 											ba.bank_id, ba.bank_name, ba.nomor_rekening, ba.atas_nama,
-											active_yn, kh.updated_by, kh.updated_at  FROM sys.kontrak_header kh
-											LEFT JOIN sys.customer cu ON kh.id_customer = cu.id_customer
-											LEFT JOIN sys.bank ba ON kh.bank_id = ba.bank_id
+											active_yn, kh.updated_by, kh.updated_at  FROM kontrak_header kh
+											LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
+											LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
 											WHERE kh.company_id = ? AND no_kontrak LIKE ?`
 
 	getContractDetailsByContractNumber  = `GetContractDetailsByContractNumber`
@@ -70,10 +70,10 @@ const (
 										active_yn, updated_by, updated_at FROM kontrak_detail WHERE no_kontrak LIKE ?`
 
 	createContractHeader  = "CreateContractHeader"
-	qCreateContractHeader = `INSERT INTO sys.kontrak_header(no_kontrak, tanggal_buat, company_id, id_customer, bank_id, active_yn, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)`
+	qCreateContractHeader = `INSERT INTO kontrak_header(no_kontrak, tanggal_buat, company_id, id_customer, bank_id, active_yn, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	createContractDetail  = "CreateContractDetail"
-	qCreateContractDetail = `INSERT INTO sys.kontrak_detail(no_kontrak, quantity, tipe_mesin, speed,
+	qCreateContractDetail = `INSERT INTO kontrak_detail(no_kontrak, quantity, tipe_mesin, speed,
 							harga_sewa, free_copy, over_copy, free_copy_color, over_copy_color, periode_awal, periode_akhir, penempatan, active_yn, updated_by)
 							VALUES (?, ?, ?, ?,
 							?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -100,11 +100,11 @@ const (
 	qGetCustomerByID = `SELECT * FROM customer WHERE id_customer = ?`
 
 	createCustomer  = "CreateCustomer"
-	qCreateCustomer = `INSERT INTO sys.customer(id_customer, company_id, nama_customer, alamat, pic, penandatangan, jabatan, no_telp, updated_by)
+	qCreateCustomer = `INSERT INTO customer(id_customer, company_id, nama_customer, alamat, pic, penandatangan, jabatan, no_telp, updated_by)
 						VALUES(?,?,?,?,?,?,?,?,?)`
 
 	updateCustomer  = "UpdateCustomer"
-	qUpdateCustomer = `UPDATE sys.customer
+	qUpdateCustomer = `UPDATE customer
 						SET 
 							nama_customer = COALESCE(NULLIF(?,''), nama_customer), 
 							alamat = COALESCE(NULLIF(?,''), alamat), 

@@ -1,4 +1,4 @@
 server:
   port: ":8080"
 database:
-  master: "sekre:Admin#1234@tcp(192.168.88.250:3306)/sys?parseTime=true"
+  master: "admin:Admin#1234!@tcp(mydbdev-1.croaque04772.us-east-1.rds.amazonaws.com:3306)/sekre?parseTime=true"
