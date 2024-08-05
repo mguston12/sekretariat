@@ -25,7 +25,8 @@ EXPOSE 8080
 
 # Copy the built binary and configuration files
 COPY --from=builder /go/src/sekretariat/bin/sekretariat /sekretariat
-COPY --from=builder /go/src/sekretariat/files/etc/sekretariat/sekretariat.development.yaml /sekretariat.development.yaml
+RUN mkdir -p /files/etc/sekretariat
+COPY --from=builder /go/src/sekretariat/files/etc/sekretariat/sekretariat.development.yaml /files/etc/sekretariat/sekretariat.development.yaml
 
 # Set the entrypoint
 ENTRYPOINT ["/sekretariat"]
