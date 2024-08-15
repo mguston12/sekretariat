@@ -8,15 +8,18 @@ type KontrakHeader struct {
 	CompanyID   int    `db:"company_id" json:"company_id"`
 	Customer
 	Bank
-	ActiveYN  string          `db:"active_yn" json:"active_yn"`
-	UpdatedBy string          `db:"updated_by" json:"updated_by"`
-	UpdatedAt time.Time       `db:"updated_at" json:"updated_at"`
-	Details   []KontrakDetail `json:"details"`
+	Pembayaran
+	Deposit           float64         `db:"deposit" json:"deposit"`
+	DendaSatuPersenYN string          `db:"denda_satupersenyn" json:"denda_satupersenyn"`
+	ActiveYN          string          `db:"active_yn" json:"active_yn"`
+	UpdatedBy         string          `db:"updated_by" json:"updated_by"`
+	UpdatedAt         time.Time       `db:"updated_at" json:"updated_at"`
+	Details           []KontrakDetail `json:"details"`
 }
 
 type KontrakDetail struct {
 	NoKontrak          string    `db:"no_kontrak" json:"no_kontrak"`
-	Quantity           int       `db:"quantity" json:"quantity"`
+	Quantity           int    `db:"quantity" json:"quantity"`
 	Tipe               string    `db:"tipe_mesin" json:"tipe_mesin"`
 	Speed              string    `db:"speed" json:"speed"`
 	Harga              float64   `db:"harga_sewa" json:"harga_sewa"`
@@ -60,4 +63,11 @@ type Bank struct {
 	Name     string `db:"bank_name" json:"bank_name"`
 	Norek    string `db:"nomor_rekening" json:"nomor_rekening"`
 	AtasNama string `db:"atas_nama" json:"atas_nama"`
+}
+
+type Pembayaran struct {
+	ID           int `db:"payment_id" json:"payment_id"`
+	PalingLambat int `db:"paling_lambat" json:"paling_lambat"`
+	Melunasi     int `db:"melunasi" json:"melunasi"`
+	Tertunda     int `db:"tertunda" json:"tertunda"`
 }

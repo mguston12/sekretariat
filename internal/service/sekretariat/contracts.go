@@ -96,6 +96,40 @@ func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakH
 	return nil
 }
 
+func (s Service) UpdateContract(ctx context.Context, header sekretariat.KontrakHeader) error {
+	err := s.data.UpdateContractHeader(ctx, header)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][UpdateContract][1]")
+	}
+
+	err = s.data.DeleteContractDetail(ctx, header.NoKontrak)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][UpdateContract][2]")
+	}
+
+	for _, detail := range header.Details {
+		detail.NoKontrak = header.NoKontrak
+		detail.UpdatedBy = header.UpdatedBy
+
+		if detail.PeriodeAwal.IsZero() {
+			layoutFormat := "2006-01-02"
+
+			_periodeAwal, _ := time.Parse(layoutFormat, detail.PeriodeAwalString)
+			_periodeAkhir, _ := time.Parse(layoutFormat, detail.PeriodeAkhirString)
+
+			detail.PeriodeAwal = _periodeAwal
+			detail.PeriodeAkhir = _periodeAkhir
+		}
+
+		err = s.data.CreateContractDetail(ctx, detail)
+		if err != nil {
+			return errors.Wrap(err, "[SERVICE][UpdateContract][3]")
+		}
+	}
+
+	return nil
+}
+
 func (s Service) GetCounterContract(ctx context.Context, company int) (string, error) {
 	var com string
 	var month string

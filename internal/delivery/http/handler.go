@@ -27,6 +27,7 @@ func (s *Server) Handler() *mux.Router {
 
 	contract.HandleFunc("/detail", s.Sekretariat.GetDataContractByContractNumber).Methods("GET")
 	contract.HandleFunc("/create", s.Sekretariat.CreateContract).Methods("POST")
+	contract.HandleFunc("/update", s.Sekretariat.UpdateContract).Methods("POST")
 	contract.HandleFunc("/print", s.Sekretariat.PrintKontrak).Methods("GET")
 	contract.HandleFunc("/counter", s.Sekretariat.GetCounterContract).Methods("GET")
 	contract.HandleFunc("", s.Sekretariat.GetAllContractsHeader).Methods("GET")
@@ -40,7 +41,13 @@ func (s *Server) Handler() *mux.Router {
 	company.HandleFunc("", s.Sekretariat.GetAllCompanies).Methods("GET")
 
 	bank := r.PathPrefix("/banks").Subrouter()
+	bank.HandleFunc("/create", s.Sekretariat.CreateBank).Methods("POST")
+	bank.HandleFunc("/update", s.Sekretariat.UpdateBank).Methods("PUT")
+	bank.HandleFunc("/delete", s.Sekretariat.DeleteBankByID).Methods("DELETE")
 	bank.HandleFunc("", s.Sekretariat.GetAllBanks).Methods("GET")
+
+	paymentMethod := r.PathPrefix("/payment-method").Subrouter()
+	paymentMethod.HandleFunc("", s.Sekretariat.GetPaymentMethod).Methods("GET")
 
 	return r
 }

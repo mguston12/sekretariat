@@ -15,6 +15,7 @@ type SekretariatSvc interface {
 	// GetContractFiltered(ctx context.Context, company int, id, name string) ([]sekretariat.Kontrak, error)
 
 	CreateContract(ctx context.Context, header sekretariat.KontrakHeader) error
+	UpdateContract(ctx context.Context, header sekretariat.KontrakHeader) error
 	PrintKontrak(ctx context.Context, company int, no_kontrak string) (bytes.Buffer, error)
 
 	// Company
@@ -27,6 +28,12 @@ type SekretariatSvc interface {
 
 	// Bank
 	GetAllBanks(ctx context.Context) ([]sekretariat.Bank, error)
+	CreateBank(ctx context.Context, bank sekretariat.Bank) error
+	UpdateBank(ctx context.Context, bank sekretariat.Bank) error
+	DeleteBankByID(ctx context.Context, id int) error
+
+	// Payment Method
+	GetPaymentMethod(ctx context.Context) ([]sekretariat.Pembayaran, error)
 }
 
 type Handler struct {

@@ -18,7 +18,9 @@ type Data interface {
 
 	CreateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error
 	CreateContractDetail(ctx context.Context, detail sekretariat.KontrakDetail) error
+	UpdateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error
 	IncreaseCounterContract(ctx context.Context, company int) error
+	DeleteContractDetail(ctx context.Context, kontrak string) error
 
 	// Customer
 	GetAllCustomers(ctx context.Context, company int) ([]sekretariat.Customer, error)
@@ -36,6 +38,12 @@ type Data interface {
 	// Bank
 	GetAllBanks(ctx context.Context) ([]sekretariat.Bank, error)
 	GetBankByID(ctx context.Context, id int) (sekretariat.Bank, error)
+	CreateBank(ctx context.Context, bank sekretariat.Bank) error
+	UpdateBank(ctx context.Context, bank sekretariat.Bank) error
+	DeleteBankByID(ctx context.Context, id int) error
+
+	// Payment Method
+	GetPaymentMethod(ctx context.Context) ([]sekretariat.Pembayaran, error)
 }
 
 // Service ...

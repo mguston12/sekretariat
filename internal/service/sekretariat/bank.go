@@ -21,3 +21,27 @@ func (s Service) GetBankByID(ctx context.Context, id int) (sekretariat.Bank, err
 	}
 	return bank, nil
 }
+
+func (s Service) CreateBank(ctx context.Context, bank sekretariat.Bank) error {
+	err := s.data.CreateBank(ctx, bank)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][CreateBank]")
+	}
+	return nil
+}
+
+func (s Service) UpdateBank(ctx context.Context, bank sekretariat.Bank) error {
+	err := s.data.UpdateBank(ctx, bank)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][UpdateBank]")
+	}
+	return nil
+}
+
+func (s Service) DeleteBankByID(ctx context.Context, id int) error {
+	err := s.data.DeleteBankByID(ctx, id)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][DeleteBankByID]")
+	}
+	return nil
+}

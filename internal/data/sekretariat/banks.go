@@ -43,3 +43,37 @@ func (d Data) GetBankByID(ctx context.Context, id int) (sekretariat.Bank, error)
 
 	return bank, nil
 }
+
+func (d Data) CreateBank(ctx context.Context, bank sekretariat.Bank) error {
+	_, err := d.stmt[createBank].ExecContext(ctx,
+		bank.Name,
+		bank.Norek,
+		bank.AtasNama,
+	)
+
+	if err != nil {
+		return errors.Wrap(err, "[DATA][CreateBank]")
+	}
+	return nil
+}
+
+func (d Data) UpdateBank(ctx context.Context, bank sekretariat.Bank) error {
+	_, err := d.stmt[updateBank].ExecContext(ctx,
+		bank.Name,
+		bank.Norek,
+		bank.AtasNama,
+		bank.ID)
+	if err != nil {
+		return errors.Wrap(err, "[DATA][UpdateBank]")
+	}
+	return nil
+}
+
+func (d Data) DeleteBankByID(ctx context.Context, id int) error {
+	_, err := d.stmt[deleteBankByID].ExecContext(ctx, id)
+
+	if err != nil {
+		return errors.Wrap(err, "[DATA][DeleteBankByID]")
+	}
+	return nil
+}

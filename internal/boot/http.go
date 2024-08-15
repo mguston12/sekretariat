@@ -43,7 +43,7 @@ func HTTP() error {
 		port = "8080" // Default port for local testing
 	}
 	address := ":" + port
-	log.Printf("Starting server on %s", address)
+	// log.Printf("Starting server on %s", address)
 	if err := server.Serve(address); err != http.ErrServerClosed {
 		return err
 	}

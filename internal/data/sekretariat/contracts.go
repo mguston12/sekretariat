@@ -2,6 +2,7 @@ package sekretariat
 
 import (
 	"context"
+	"fmt"
 	"sekretariat/internal/entity/sekretariat"
 
 	"sekretariat/pkg/errors"
@@ -109,12 +110,16 @@ func (d Data) GetContractDetailsByContractNumber(ctx context.Context, no_kontrak
 }
 
 func (d Data) CreateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error {
+	fmt.Println(header)
 	_, err := d.stmt[createContractHeader].ExecContext(ctx,
 		header.NoKontrak,
 		header.TanggalBuat,
 		header.CompanyID,
 		header.CustomerID,
 		header.Bank.ID,
+		header.Pembayaran.ID,
+		header.Deposit,
+		header.DendaSatuPersenYN,
 		header.ActiveYN,
 		header.UpdatedBy,
 	)
@@ -149,26 +154,32 @@ func (d Data) CreateContractDetail(ctx context.Context, detail sekretariat.Kontr
 	return nil
 }
 
-// func (d Data) UpdateStorage(ctx context.Context, storage purchasing.Storage) error {
-// 	_, err := d.stmt[updateStorage].ExecContext(ctx,
-// 		storage.Name,
-// 		storage.ActiveYN,
-// 		storage.UserID,
-// 		storage.Code)
-// 	if err != nil {
-// 		return errors.Wrap(err, "[DATA][UpdateStorage]")
-// 	}
-// 	return nil
-// }
+func (d Data) UpdateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error {
+	fmt.Println(header)
+	_, err := d.stmt[updateContractHeader].ExecContext(ctx,
+		header.TanggalBuat,
+		header.CustomerID,
+		header.Bank.ID,
+		header.Pembayaran.ID,
+		header.Deposit,
+		header.DendaSatuPersenYN,
+		header.ActiveYN,
+		header.UpdatedBy,
+		header.NoKontrak)
+	if err != nil {
+		return errors.Wrap(err, "[DATA][UpdateContractHeader]")
+	}
+	return nil
+}
 
-// func (d Data) DeleteStorageByCode(ctx context.Context, stocode int) error {
-// 	_, err := d.stmt[deleteStorageByCode].ExecContext(ctx, stocode)
+func (d Data) DeleteContractDetail(ctx context.Context, kontrak string) error {
+	_, err := d.stmt[deleteContractDetail].ExecContext(ctx, kontrak)
 
-// 	if err != nil {
-// 		return errors.Wrap(err, "[DATA][DeleteStorageByCode]")
-// 	}
-// 	return nil
-// }
+	if err != nil {
+		return errors.Wrap(err, "[DATA][DeleteContractDetail]")
+	}
+	return nil
+}
 
 func (d Data) GetCounterContract(ctx context.Context, company int) (int, error) {
 	counter := 0

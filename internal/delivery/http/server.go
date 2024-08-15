@@ -15,6 +15,7 @@ type SekretariatHandler interface {
 	GetCounterContract(w http.ResponseWriter, r *http.Request)
 
 	CreateContract(w http.ResponseWriter, r *http.Request)
+	UpdateContract(w http.ResponseWriter, r *http.Request)
 	PrintKontrak(w http.ResponseWriter, r *http.Request)
 
 	// Company
@@ -27,6 +28,12 @@ type SekretariatHandler interface {
 
 	// Bank
 	GetAllBanks(w http.ResponseWriter, r *http.Request)
+	CreateBank(w http.ResponseWriter, r *http.Request)
+	UpdateBank(w http.ResponseWriter, r *http.Request)
+	DeleteBankByID(w http.ResponseWriter, r *http.Request)
+
+	// Payment Method
+	GetPaymentMethod(w http.ResponseWriter, r *http.Request)
 }
 
 // Server ...
