@@ -38,8 +38,7 @@ const (
 							AND
 	 							((no_kontrak LIKE ? OR ? = '')
 	 						OR
-	 							(cu.nama_customer LIKE ? OR ? = ''))
-							AND ()`
+	 							(cu.nama_customer LIKE ? OR ? = ''))`
 
 	getAllContractsHeaderPage  = "GetAllContractsHeaderPage"
 	qGetAllContractsHeaderPage = `SELECT no_kontrak, tanggal_buat, kh.company_id, kh.id_customer,
