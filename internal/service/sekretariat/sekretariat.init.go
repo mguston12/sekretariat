@@ -15,6 +15,7 @@ type Data interface {
 	GetCounterContract(ctx context.Context, company int) (int, error)
 	GetContractsHeaderByContractNumber(ctx context.Context, company int, no_kontrak string) (sekretariat.KontrakHeader, error)
 	GetContractDetailsByContractNumber(ctx context.Context, no_kontrak string) ([]sekretariat.KontrakDetail, error)
+	GetContractExp30Days(ctx context.Context, company int) ([]sekretariat.KontrakDetail, error)
 
 	CreateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error
 	CreateContractDetail(ctx context.Context, detail sekretariat.KontrakDetail) error
@@ -38,6 +39,7 @@ type Data interface {
 	// Bank
 	GetAllBanks(ctx context.Context) ([]sekretariat.Bank, error)
 	GetBankByID(ctx context.Context, id int) (sekretariat.Bank, error)
+	GetBankByCompanyID(ctx context.Context, id int) ([]sekretariat.Bank, error)
 	CreateBank(ctx context.Context, bank sekretariat.Bank) error
 	UpdateBank(ctx context.Context, bank sekretariat.Bank) error
 	DeleteBankByID(ctx context.Context, id int) error

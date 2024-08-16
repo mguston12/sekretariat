@@ -57,6 +57,25 @@ func (h *Handler) GetDataContractByContractNumber(w http.ResponseWriter, r *http
 	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
 }
 
+func (h *Handler) GetContractExp30Days(w http.ResponseWriter, r *http.Request) {
+	resp := response.Response{}
+	defer resp.RenderJSON(w, r)
+
+	company, _ := strconv.Atoi(r.FormValue("company"))
+	ctx := r.Context()
+
+	result, err := h.sekretariatSvc.GetContractExp30Days(ctx, company)
+	if err != nil {
+		resp = httpHelper.ParseErrorCode(err.Error())
+		log.Printf("[ERROR][%s][%s] %s | Reason: %s", r.RemoteAddr, r.Method, r.URL, err.Error())
+		return
+	}
+
+	resp.Data = result
+
+	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
+}
+
 func (h *Handler) GetCounterContract(w http.ResponseWriter, r *http.Request) {
 	resp := response.Response{}
 	defer resp.RenderJSON(w, r)

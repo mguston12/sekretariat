@@ -57,13 +57,13 @@ func (s Service) GetDataContractByContractNumber(ctx context.Context, company in
 	return header, nil
 }
 
-// func (s Service) GetContractFiltered(ctx context.Context, company int, id, name string) ([]sekretariat.Kontrak, error) {
-// 	contract, err := s.data.GetContractFiltered(ctx, company, id, name)
-// 	if err != nil {
-// 		return contract, errors.Wrap(err, "[SERVICE][GetContractFiltered]")
-// 	}
-// 	return contract, nil
-// }
+func (s Service) GetContractExp30Days(ctx context.Context, company int) ([]sekretariat.KontrakDetail, error) {
+	contract, err := s.data.GetContractExp30Days(ctx, company)
+	if err != nil {
+		return contract, errors.Wrap(err, "[SERVICE][GetContractExp30Days]")
+	}
+	return contract, nil
+}
 
 func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakHeader) error {
 	err := s.data.CreateContractHeader(ctx, header)

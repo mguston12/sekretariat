@@ -30,6 +30,7 @@ func (s *Server) Handler() *mux.Router {
 	contract.HandleFunc("/update", s.Sekretariat.UpdateContract).Methods("POST")
 	contract.HandleFunc("/print", s.Sekretariat.PrintKontrak).Methods("GET")
 	contract.HandleFunc("/counter", s.Sekretariat.GetCounterContract).Methods("GET")
+	contract.HandleFunc("/expiredsoon", s.Sekretariat.GetContractExp30Days).Methods("GET")
 	contract.HandleFunc("", s.Sekretariat.GetAllContractsHeader).Methods("GET")
 
 	customer := r.PathPrefix("/customers").Subrouter()
@@ -44,6 +45,7 @@ func (s *Server) Handler() *mux.Router {
 	bank.HandleFunc("/create", s.Sekretariat.CreateBank).Methods("POST")
 	bank.HandleFunc("/update", s.Sekretariat.UpdateBank).Methods("PUT")
 	bank.HandleFunc("/delete", s.Sekretariat.DeleteBankByID).Methods("DELETE")
+	bank.HandleFunc("/filter", s.Sekretariat.GetBankByCompanyID).Methods("GET")
 	bank.HandleFunc("", s.Sekretariat.GetAllBanks).Methods("GET")
 
 	paymentMethod := r.PathPrefix("/payment-method").Subrouter()

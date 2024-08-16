@@ -22,6 +22,14 @@ func (s Service) GetBankByID(ctx context.Context, id int) (sekretariat.Bank, err
 	return bank, nil
 }
 
+func (s Service) GetBankByCompanyID(ctx context.Context, id int) ([]sekretariat.Bank, error) {
+	bank, err := s.data.GetBankByCompanyID(ctx, id)
+	if err != nil {
+		return bank, errors.Wrap(err, "[SERVICE][GetBankByCompanyID]")
+	}
+	return bank, nil
+}
+
 func (s Service) CreateBank(ctx context.Context, bank sekretariat.Bank) error {
 	err := s.data.CreateBank(ctx, bank)
 	if err != nil {

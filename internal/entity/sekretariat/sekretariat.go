@@ -18,8 +18,9 @@ type KontrakHeader struct {
 }
 
 type KontrakDetail struct {
+	ID                 int       `db:"id_detail" json:"id_detail"`
 	NoKontrak          string    `db:"no_kontrak" json:"no_kontrak"`
-	Quantity           int    `db:"quantity" json:"quantity"`
+	Quantity           int       `db:"quantity" json:"quantity"`
 	Tipe               string    `db:"tipe_mesin" json:"tipe_mesin"`
 	Speed              string    `db:"speed" json:"speed"`
 	Harga              float64   `db:"harga_sewa" json:"harga_sewa"`
@@ -59,10 +60,11 @@ type Company struct {
 }
 
 type Bank struct {
-	ID       int    `db:"bank_id" json:"bank_id"`
-	Name     string `db:"bank_name" json:"bank_name"`
-	Norek    string `db:"nomor_rekening" json:"nomor_rekening"`
-	AtasNama string `db:"atas_nama" json:"atas_nama"`
+	ID        int    `db:"bank_id" json:"bank_id"`
+	Name      string `db:"bank_name" json:"bank_name"`
+	Norek     string `db:"nomor_rekening" json:"nomor_rekening"`
+	AtasNama  string `db:"atas_nama" json:"atas_nama"`
+	CompanyID int    `db:"company_id" json:"company_id"`
 }
 
 type Pembayaran struct {

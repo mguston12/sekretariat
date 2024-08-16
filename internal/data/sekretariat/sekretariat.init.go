@@ -33,7 +33,7 @@ const (
 							active_yn, kh.updated_by, kh.updated_at  FROM kontrak_header kh
 							LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 							LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
-							LEFT JOIN payment_method p ON p.payment_id = kh.cara_pembayaran
+							LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
 							WHERE kh.company_id = ?
 							AND
 	 							((no_kontrak LIKE ? OR ? = '')
@@ -49,7 +49,7 @@ const (
 								active_yn, kh.updated_by, kh.updated_at  FROM kontrak_header kh
 								LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 								LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
-								LEFT JOIN payment_method p ON p.payment_id = kh.cara_pembayaran
+								LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
 								WHERE kh.company_id = ?
 								AND
 									((no_kontrak LIKE ? OR ? = '')
@@ -60,7 +60,7 @@ const (
 	qGetAllContractsHeaderCount = `SELECT count(*) FROM kontrak_header kh
 								LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 								LEFT JOIN bank ba ON kh.bank_id = ba.bank_id 
-								LEFT JOIN payment_method p ON p.payment_id = kh.cara_pembayaran
+								LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
 								WHERE kh.company_id = ?`
 
 	getContractHeaderByContractNumber  = "GetContractHeaderByContractNumber"
@@ -72,7 +72,7 @@ const (
 											active_yn, kh.updated_by, kh.updated_at  FROM kontrak_header kh
 											LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 											LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
-											LEFT JOIN payment_method p ON p.payment_id = kh.cara_pembayaran
+											LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
 											WHERE kh.company_id = ? AND no_kontrak LIKE ?`
 
 	getContractDetailsByContractNumber  = `GetContractDetailsByContractNumber`
@@ -81,14 +81,17 @@ const (
 										active_yn, updated_by, updated_at FROM kontrak_detail WHERE no_kontrak LIKE ?`
 
 	getContractExp30Days  = "GetContractExp30Days"
-	qGetContractExp30Days = `SELECT no_kontrak, quantity, tipe_mesin, speed, harga_sewa, 
-       						free_copy, over_copy, free_copy_color, over_copy_color, periode_awal, periode_akhir, penempatan,
-      						active_yn, updated_by, updated_at 
-							FROM kontrak_detail 
-							WHERE periode_akhir < CURRENT_DATE + INTERVAL '30' DAY;`
+	qGetContractExp30Days = `SELECT d.*
+							FROM kontrak_detail d
+							JOIN kontrak_header h ON h.no_kontrak = d.no_kontrak
+							WHERE h.company_id = ?
+							AND d.periode_akhir >= DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
+							AND d.periode_akhir < DATE_FORMAT(CURDATE() + INTERVAL 2 MONTH, '%Y-%m-01');
+
+`
 
 	createContractHeader  = "CreateContractHeader"
-	qCreateContractHeader = `INSERT INTO kontrak_header(no_kontrak, tanggal_buat, company_id, id_customer, bank_id, cara_pembayaran, deposit, denda_satupersenyn, active_yn, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	qCreateContractHeader = `INSERT INTO kontrak_header(no_kontrak, tanggal_buat, company_id, id_customer, bank_id, payment_id, deposit, denda_satupersenyn, active_yn, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	createContractDetail  = "CreateContractDetail"
 	qCreateContractDetail = `INSERT INTO kontrak_detail(no_kontrak, quantity, tipe_mesin, speed,
@@ -102,7 +105,7 @@ const (
 						tanggal_buat = COALESCE(NULLIF(?,''), tanggal_buat), 
 						id_customer = COALESCE(NULLIF(?,''), id_customer), 
 						bank_id = COALESCE(NULLIF(?,''), bank_id), 
-						cara_pembayaran = COALESCE(NULLIF(?,''), cara_pembayaran), 
+						payment_id = COALESCE(NULLIF(?,''), payment_id), 
 						deposit = COALESCE(NULLIF(?,''), deposit),
 						denda_satupersenyn = COALESCE(NULLIF(?,''), denda_satupersenyn),
 						active_yn = COALESCE(NULLIF(?,''), active_yn),
@@ -173,6 +176,9 @@ const (
 	getBankByID  = "GetBankByID"
 	qGetBankByID = `SELECT * FROM bank WHERE bank_id = ?`
 
+	getBankByCompanyID  = "GetBankByCompanyID"
+	qGetBankByCompanyID = `SELECT * FROM bank WHERE company_id = ?`
+
 	createBank  = "CreateBank"
 	qCreateBank = `INSERT INTO bank(bank_name, nomor_rekening, atas_nama)
 						VALUES(?,?,?)`
@@ -218,6 +224,7 @@ var (
 		//Bank
 		{getAllBanks, qGetAllBanks},
 		{getBankByID, qGetBankByID},
+		{getBankByCompanyID, qGetBankByCompanyID},
 
 		//Payment Method
 		{getPaymentMethod, qGetPaymentMethod},

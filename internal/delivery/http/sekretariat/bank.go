@@ -34,6 +34,31 @@ func (h *Handler) GetAllBanks(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
 }
 
+func (h *Handler) GetBankByCompanyID(w http.ResponseWriter, r *http.Request) {
+	var (
+		result   interface{}
+		metadata interface{}
+		err      error
+		resp     response.Response
+	)
+	defer resp.RenderJSON(w, r)
+
+	ctx := r.Context()
+
+	company, _ := strconv.Atoi(r.FormValue("company"))
+	result, err = h.sekretariatSvc.GetBankByCompanyID(ctx, company)
+	if err != nil {
+		resp = httpHelper.ParseErrorCode(err.Error())
+		log.Printf("[ERROR][%s][%s] %s | Reason: %s", r.RemoteAddr, r.Method, r.URL, err.Error())
+		return
+	}
+
+	resp.Data = result
+	resp.Metadata = metadata
+
+	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
+}
+
 func (h *Handler) CreateBank(w http.ResponseWriter, r *http.Request) {
 	resp := response.Response{}
 	defer resp.RenderJSON(w, r)

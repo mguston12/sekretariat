@@ -11,6 +11,7 @@ import (
 type SekretariatHandler interface {
 	// Contract
 	GetAllContractsHeader(w http.ResponseWriter, r *http.Request)
+	GetContractExp30Days(w http.ResponseWriter, r *http.Request)
 	GetDataContractByContractNumber(w http.ResponseWriter, r *http.Request)
 	GetCounterContract(w http.ResponseWriter, r *http.Request)
 
@@ -28,6 +29,7 @@ type SekretariatHandler interface {
 
 	// Bank
 	GetAllBanks(w http.ResponseWriter, r *http.Request)
+	GetBankByCompanyID(w http.ResponseWriter, r *http.Request)
 	CreateBank(w http.ResponseWriter, r *http.Request)
 	UpdateBank(w http.ResponseWriter, r *http.Request)
 	DeleteBankByID(w http.ResponseWriter, r *http.Request)

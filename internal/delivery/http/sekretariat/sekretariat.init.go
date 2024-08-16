@@ -9,6 +9,7 @@ import (
 type SekretariatSvc interface {
 	// Contract
 	GetAllContractsHeader(ctx context.Context, company int, keyword string, page, length int) ([]sekretariat.KontrakHeader, int, error)
+	GetContractExp30Days(ctx context.Context, company int) ([]sekretariat.KontrakDetail, error)
 	GetDataContractByContractNumber(ctx context.Context, company int, no_kontrak string) (sekretariat.KontrakHeader, error)
 	GetCounterContract(ctx context.Context, company int) (string, error)
 
@@ -28,6 +29,7 @@ type SekretariatSvc interface {
 
 	// Bank
 	GetAllBanks(ctx context.Context) ([]sekretariat.Bank, error)
+	GetBankByCompanyID(ctx context.Context, id int) ([]sekretariat.Bank, error)
 	CreateBank(ctx context.Context, bank sekretariat.Bank) error
 	UpdateBank(ctx context.Context, bank sekretariat.Bank) error
 	DeleteBankByID(ctx context.Context, id int) error

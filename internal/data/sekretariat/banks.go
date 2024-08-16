@@ -44,6 +44,31 @@ func (d Data) GetBankByID(ctx context.Context, id int) (sekretariat.Bank, error)
 	return bank, nil
 }
 
+func (d Data) GetBankByCompanyID(ctx context.Context, id int) ([]sekretariat.Bank, error) {
+	var (
+		rows  *sqlx.Rows
+		datas []sekretariat.Bank
+		err   error
+	)
+
+	rows, err = d.stmt[getBankByCompanyID].QueryxContext(ctx, id)
+	if err != nil {
+		return datas, errors.Wrap(err, "[DATA][GetBankByCompanyID]")
+	}
+
+	for rows.Next() {
+		var data sekretariat.Bank
+		err := rows.StructScan(&data)
+		if err != nil {
+			return datas, errors.Wrap(err, "[DATA][GetBankByCompanyID]")
+		}
+		datas = append(datas, data)
+	}
+	defer rows.Close()
+
+	return datas, nil
+}
+
 func (d Data) CreateBank(ctx context.Context, bank sekretariat.Bank) error {
 	_, err := d.stmt[createBank].ExecContext(ctx,
 		bank.Name,

@@ -37,6 +37,31 @@ func (d Data) GetAllContractsHeader(ctx context.Context, company int, keyword st
 	return datas, nil
 }
 
+func (d Data) GetContractExp30Days(ctx context.Context, company int) ([]sekretariat.KontrakDetail, error) {
+	var (
+		rows  *sqlx.Rows
+		datas []sekretariat.KontrakDetail
+		err   error
+	)
+
+	rows, err = d.stmt[getContractExp30Days].QueryxContext(ctx, company)
+	if err != nil {
+		return datas, errors.Wrap(err, "[DATA][GetContractExp30Days]")
+	}
+
+	for rows.Next() {
+		var data sekretariat.KontrakDetail
+		err := rows.StructScan(&data)
+		if err != nil {
+			return datas, errors.Wrap(err, "[DATA][GetContractExp30Days]")
+		}
+		datas = append(datas, data)
+	}
+	defer rows.Close()
+
+	return datas, nil
+}
+
 func (d Data) GetAllContractsHeaderPage(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.KontrakHeader, error) {
 	headers := []sekretariat.KontrakHeader{}
 
@@ -201,15 +226,15 @@ func (d Data) GetCounterContract(ctx context.Context, company int) (int, error) 
 func (d Data) IncreaseCounterContract(ctx context.Context, company int) error {
 	tx, err := d.db.Beginx()
 	if err != nil {
-		return errors.Wrap(err, "[DATA][FetchAndIncreaseCounter]")
+		return errors.Wrap(err, "[DATA][IncreaseCounterContract]")
 	}
 	if _, err := tx.ExecContext(ctx, `UPDATE counter_kontrak SET count = count + 1 WHERE company = ?`, company); err != nil {
-		return errors.Wrap(err, "[DATA][FetchAndIncreaseCounter][B]")
+		return errors.Wrap(err, "[DATA][IncreaseCounterContract][B]")
 	}
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
-		return errors.Wrap(err, "[DATA][FetchAndIncreaseCounter]")
+		return errors.Wrap(err, "[DATA][IncreaseCounterContract]")
 	}
 	return nil
 }
