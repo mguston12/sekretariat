@@ -24,10 +24,10 @@ type KontrakDetail struct {
 	Tipe               string    `db:"tipe_mesin" json:"tipe_mesin"`
 	Speed              string    `db:"speed" json:"speed"`
 	Harga              float64   `db:"harga_sewa" json:"harga_sewa"`
-	FreeCopy           int       `db:"free_copy" json:"free_copy"`
-	OverCopy           int       `db:"over_copy" json:"over_copy"`
-	FreeCopyColor      int       `db:"free_copy_color" json:"free_copy_color"`
-	OverCopyColor      int       `db:"over_copy_color" json:"over_copy_color"`
+	FreeCopy           string    `db:"free_copy" json:"free_copy"`
+	OverCopy           string    `db:"over_copy" json:"over_copy"`
+	FreeCopyColor      string    `db:"free_copy_color" json:"free_copy_color"`
+	OverCopyColor      string    `db:"over_copy_color" json:"over_copy_color"`
 	PeriodeAwal        time.Time `db:"periode_awal" json:"periode_awal"`
 	PeriodeAwalString  string    `json:"periode_awal_string"`
 	PeriodeAkhir       time.Time `db:"periode_akhir" json:"periode_akhir"`

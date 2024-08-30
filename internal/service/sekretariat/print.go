@@ -38,12 +38,19 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
+	initialY := 0.0
 
-	pdf.SetXY(25, 25)
+	if kontrak.CompanyID == 3 || kontrak.CompanyID == 2 {
+		pdf.SetXY(25, 30)
+		initialY = pdf.GetY() + 5.0
+	} else {
+		pdf.SetXY(25, 25)
+	}
 
 	// KONTRAK BARU (PER 9 AGUSTUS 2024)
 	pdf.SetFont("times", "B", 10.5)
-	initialY := pdf.GetY()
+	initialY = pdf.GetY()
+
 	pdf.Text(74, initialY+5, "PERJANJIAN SEWA MENYEWA")
 	pdf.Text(70, initialY+10, "MESIN PRINTER MULTIFUNCTION")
 
@@ -58,7 +65,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 
 	paragraphWidth = 167.0
 
-	pdf.SetXY(20, 45)
+	pdf.SetXY(20, height+10)
 	pdf.SetFont("times", "", 10.5)
 
 	text = "Pada hari ini " + kontrak.TanggalBuat + ", dibuat dan ditandatangani Perjanjian Sewa Menyewa Mesin Printer Multifunction (untuk selanjutnya disebut sebagai \"Perjanjian\") oleh dan antara :"
@@ -66,16 +73,16 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
 	// PIHAK SATU 32.8
-	pdf.Text(25, height+32.8, "1.")
-	pdf.SetXY(30, height+29)
+	pdf.Text(25, height+28.8, "1.")
+	pdf.SetXY(30, height+25)
 	pdf.SetFont("times", "", 10.5)
 	paragraphWidth = 157.0
 	textPihakPertama := dataCompany.PIC + ", Direktur, sah mewakili " + strings.ToUpper(dataCompany.Name) + " suatu perseroan terbatas yang berkedudukan di " + dataCompany.Address + " (\"Pihak Pertama\"); dan"
 	pdf.MultiCell(paragraphWidth, 4.5, textPihakPertama, "", "J", false)
 
 	// PIHAK DUA
-	pdf.Text(25, height+44.5, "2.")
-	pdf.SetXY(30, height+41)
+	pdf.Text(25, height+40.5, "2.")
+	pdf.SetXY(30, height+37)
 	pdf.SetFont("times", "", 10.5)
 	paragraphWidth = 157.0
 
@@ -87,7 +94,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	finalY := pdf.GetY()
 	lines := (finalY - initialY) / 5
 
-	height = height + 39 + (lines+1)*5
+	height = height + 35 + (lines+1)*5
 
 	paragraphWidth = 168.0
 
@@ -96,27 +103,27 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	text = "Pihak Pertama dan Pihak Kedua secara bersama-sama disebut sebagai \"Para Pihak\" dan masing-masing sebagai \"Pihak\"."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
-	pdf.SetXY(20, height+14)
+	pdf.SetXY(20, height+12)
 	pdf.SetFont("times", "", 10.5)
 	text = "Kontrak Perjanjian ini menjadi satu kesatuan dari form pemesanan (Order Confirmation) dan tidak terpisahkan dari konfirmasi dan permohonan sewa."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
-	pdf.SetXY(20, height+28)
+	pdf.SetXY(20, height+24)
 	pdf.SetFont("times", "", 10.5)
 	text = "Menyatakan bahwa Para Pihak setuju dan sepakat untuk menandatangani perjanjian  untuk  menyewa Mesin milik Pihak Pertama tersebut untuk dipergunakan sebagai  sarana  operasional Pihak Kedua dengan ketentuan dan syarat-syarat sebagai berikut:"
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
-	height = height + 47
+	height = height + 43
 
 	// PASAL 1
 	pdf.SetFont("times", "B", 10.5)
 	pdf.Text(95, height, "PASAL 1")
 	pdf.Text(83, height+4, "HAK DAN KEWAJIBAN")
 
-	pdf.Text(21, height+11, "I.")
-	pdf.Text(26, height+11, "Pihak Pertama")
+	pdf.Text(21, height+9, "I.")
+	pdf.Text(26, height+9, "Pihak Pertama")
 
-	height = height + 13.5
+	height = height + 11.5
 
 	if len(kontrak.Details) == 1 {
 		pdf.SetFont("times", "", 10.5)
@@ -154,7 +161,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	text = "Sisa bahan pakai dan suku cabang bekas tetap milik Pihak Pertama."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
-	height = height + 18
+	height = height + 16
 
 	pdf.SetFont("times", "B", 10.5)
 	pdf.Text(20, height, "II.")
@@ -195,7 +202,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 	count = count + 2
 
-	height = height_number + count*4.5
+	height = height_number - 2 + count*4.5
 
 	pdf.SetFont("times", "B", 10.5)
 	pdf.Text(95, height, "PASAL 2")
@@ -209,15 +216,34 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	height_text = height - 3.3
 
 	formatRupiah := rupiah.FormatRupiah(kontrak.Details[0].Harga)
-	formatOverCopy := rupiah.FormatRupiah(float64(kontrak.Details[0].OverCopy))
 
 	pdf.SetFont("times", "", 10.5)
 	pdf.Text(26, height_number, strconv.Itoa(number)+".")
 	pdf.SetXY(32, height_text)
 	paragraphWidth = 159.0
-	text = "Biaya sewa: " + formatRupiah + "/bulan, Free Copy " + strconv.Itoa(kontrak.Details[0].FreeCopy) + " copy, Over Copy " + formatOverCopy + "/copy."
+	freeCopyBW, overCopyBW, freeCopyColor, overCopyColor := "", "", "", ""
+
+	if kontrak.Details[0].FreeCopy != "" && kontrak.Details[0].FreeCopy != "0" {
+		freeCopyBW = ", Free Copy " + kontrak.Details[0].FreeCopy
+	}
+	if kontrak.Details[0].OverCopy != "" && kontrak.Details[0].OverCopy != "0" {
+		overCopyBW = ", Over Copy " + kontrak.Details[0].OverCopy
+	}
+	if kontrak.Details[0].FreeCopyColor != "" && kontrak.Details[0].FreeCopyColor != "0" {
+		freeCopyColor = ", Free Copy Color " + kontrak.Details[0].FreeCopyColor
+	}
+	if kontrak.Details[0].OverCopyColor != "" && kontrak.Details[0].OverCopyColor != "0" {
+		overCopyColor = ", Over Copy Color " + kontrak.Details[0].OverCopyColor
+	}
+	initialY = pdf.GetY()
+
+	text = "Biaya sewa: " + formatRupiah + "/bulan" + freeCopyBW + overCopyBW + freeCopyColor + overCopyColor + "."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
-	count++
+
+	finalY = pdf.GetY()
+
+	lines = (finalY - initialY) / 4.5
+	count = count + lines
 	number++
 
 	if dataCompany.ID == 3 {
@@ -1181,3 +1207,31 @@ func numberToWords(num int) string {
 
 	return strings.TrimSpace(words)
 }
+
+// func formatNumberWithDotSeparator(number int) string {
+// 	// Convert the number to a string
+// 	numStr := strconv.Itoa(number)
+
+// 	// Reverse the string to make it easier to insert separators
+// 	reversed := reverseString(numStr)
+
+// 	var result strings.Builder
+// 	for i, c := range reversed {
+// 		if i > 0 && i%3 == 0 {
+// 			result.WriteRune('.')
+// 		}
+// 		result.WriteRune(c)
+// 	}
+
+// 	// Reverse the string back to its original order
+// 	return reverseString(result.String())
+// }
+
+// // Helper function to reverse a string
+// func reverseString(s string) string {
+// 	runes := []rune(s)
+// 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+// 		runes[i], runes[j] = runes[j], runes[i]
+// 	}
+// 	return string(runes)
+// }

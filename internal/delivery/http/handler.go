@@ -36,6 +36,7 @@ func (s *Server) Handler() *mux.Router {
 	customer := r.PathPrefix("/customers").Subrouter()
 	customer.HandleFunc("/create", s.Sekretariat.CreateCustomer).Methods("POST")
 	customer.HandleFunc("/update", s.Sekretariat.UpdateCustomer).Methods("PUT")
+	customer.HandleFunc("/croncustomers", s.Sekretariat.ImportCustomersFromExcel).Methods("GET")
 	customer.HandleFunc("", s.Sekretariat.GetCustomerFiltered).Methods("GET")
 
 	company := r.PathPrefix("/companies").Subrouter()

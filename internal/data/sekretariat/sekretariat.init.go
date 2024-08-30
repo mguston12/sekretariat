@@ -106,7 +106,7 @@ const (
 						id_customer = COALESCE(NULLIF(?,''), id_customer), 
 						bank_id = COALESCE(NULLIF(?,''), bank_id), 
 						payment_id = COALESCE(NULLIF(?,''), payment_id), 
-						deposit = COALESCE(NULLIF(?,''), deposit),
+						deposit = COALESCE(NULLIF(?,''), 0),
 						denda_satupersenyn = COALESCE(NULLIF(?,''), denda_satupersenyn),
 						active_yn = COALESCE(NULLIF(?,''), active_yn),
 						updated_by = COALESCE(NULLIF(?,''), updated_by)
@@ -174,7 +174,7 @@ const (
 	qGetAllBanks = `SELECT * FROM bank`
 
 	getBankByID  = "GetBankByID"
-	qGetBankByID = `SELECT * FROM bank WHERE bank_id = ?`
+	qGetBankByID = `SELECT * FROM bank WHERE bank_id = ? ORDER BY company_id ASC`
 
 	getBankByCompanyID  = "GetBankByCompanyID"
 	qGetBankByCompanyID = `SELECT * FROM bank WHERE company_id = ?`
