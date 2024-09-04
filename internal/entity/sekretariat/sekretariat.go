@@ -3,6 +3,7 @@ package sekretariat
 import "time"
 
 type KontrakHeader struct {
+	IDHeader    int    `db:"id_header" json:"id_header"`
 	NoKontrak   string `db:"no_kontrak" json:"no_kontrak"`
 	TanggalBuat string `db:"tanggal_buat" json:"tanggal_buat"`
 	CompanyID   int    `db:"company_id" json:"company_id"`

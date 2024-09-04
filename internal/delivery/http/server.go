@@ -18,6 +18,7 @@ type SekretariatHandler interface {
 	CreateContract(w http.ResponseWriter, r *http.Request)
 	UpdateContract(w http.ResponseWriter, r *http.Request)
 	PrintKontrak(w http.ResponseWriter, r *http.Request)
+	ImportContractsFromExcel(w http.ResponseWriter, r *http.Request)
 
 	// Company
 	GetAllCompanies(w http.ResponseWriter, r *http.Request)

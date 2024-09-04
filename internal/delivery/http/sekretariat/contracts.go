@@ -173,3 +173,23 @@ func (h *Handler) PrintKontrak(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
 }
+
+func (h *Handler) ImportContractsFromExcel(w http.ResponseWriter, r *http.Request) {
+	var (
+		err  error
+		resp response.Response
+	)
+	defer resp.RenderJSON(w, r)
+
+	ctx := r.Context()
+	result, err := h.sekretariatSvc.ImportContractsFromExcel(ctx)
+
+	if err != nil {
+		resp = httpHelper.ParseErrorCode(err.Error())
+		log.Printf("[ERROR][%s][%s] %s | Reason: %s", r.RemoteAddr, r.Method, r.URL, err.Error())
+		return
+	}
+	resp.Data = result
+
+	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
+}

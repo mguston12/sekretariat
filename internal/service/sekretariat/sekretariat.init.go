@@ -11,10 +11,11 @@ type Data interface {
 	// Contracts
 	GetAllContractsHeader(ctx context.Context, company int, keyword string) ([]sekretariat.KontrakHeader, error)
 	GetAllContractsHeaderPage(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.KontrakHeader, error)
-	GetAllContractsHeaderCount(ctx context.Context, company int) ([]sekretariat.KontrakHeader, int, error)
+	GetAllContractsHeaderCount(ctx context.Context, company int, keyword string) ([]sekretariat.KontrakHeader, int, error)
 	GetCounterContract(ctx context.Context, company int) (int, error)
 	GetContractsHeaderByContractNumber(ctx context.Context, company int, no_kontrak string) (sekretariat.KontrakHeader, error)
 	GetContractDetailsByContractNumber(ctx context.Context, no_kontrak string) ([]sekretariat.KontrakDetail, error)
+	GetContractByNumber(ctx context.Context, kontrak string) (bool, error)
 	GetContractExp30Days(ctx context.Context, company int) ([]sekretariat.KontrakDetail, error)
 
 	CreateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error
@@ -25,6 +26,7 @@ type Data interface {
 
 	// Customer
 	GetAllCustomers(ctx context.Context, company int) ([]sekretariat.Customer, error)
+	GetCustomerIDByNameAndAddress(ctx context.Context, name, address string) (string, error)
 	GetCustomerFiltered(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.Customer, error)
 	GetCustomerFilteredCount(ctx context.Context, company int, keyword string) ([]sekretariat.Customer, int, error)
 	CreateCustomer(ctx context.Context, customer sekretariat.Customer) error

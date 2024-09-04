@@ -18,6 +18,7 @@ type SekretariatSvc interface {
 	CreateContract(ctx context.Context, header sekretariat.KontrakHeader) error
 	UpdateContract(ctx context.Context, header sekretariat.KontrakHeader) error
 	PrintKontrak(ctx context.Context, company int, no_kontrak string) (bytes.Buffer, error)
+	ImportContractsFromExcel(ctx context.Context) (interface{}, error)
 
 	// Company
 	GetAllCompanies(ctx context.Context) ([]sekretariat.Company, error)

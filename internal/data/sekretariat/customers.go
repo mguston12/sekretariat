@@ -65,7 +65,9 @@ func (d Data) GetCustomerFilteredCount(ctx context.Context, company int, keyword
 	customers := []sekretariat.Customer{}
 	var count int
 
-	if err := d.stmt[getCustomerFilteredCount].QueryRowxContext(ctx, company, keyword, keyword, keyword, keyword).Scan(&count); err != nil {
+	_keyword := "%" + keyword + "%"
+
+	if err := d.stmt[getCustomerFilteredCount].QueryRowxContext(ctx, company, _keyword, _keyword, _keyword, _keyword).Scan(&count); err != nil {
 		return customers, count, errors.Wrap(err, "[DATA][GetCustomerFilteredCount]")
 	}
 
@@ -80,6 +82,16 @@ func (d Data) GetCustomerByID(ctx context.Context, id string) (sekretariat.Custo
 	}
 
 	return customer, nil
+}
+
+func (d Data) GetCustomerIDByNameAndAddress(ctx context.Context, name, address string) (string, error) {
+	customer_id := ""
+
+	if err := d.stmt[getCustomerByNameAndAddress].QueryRowxContext(ctx, name, address).Scan(&customer_id); err != nil {
+		return customer_id, errors.Wrap(err, "[DATA][GetCustomerByID]")
+	}
+
+	return customer_id, nil
 }
 
 func (d Data) CreateCustomer(ctx context.Context, customer sekretariat.Customer) error {

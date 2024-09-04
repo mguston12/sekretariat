@@ -3,6 +3,7 @@ package sekretariat
 import (
 	"context"
 	"fmt"
+	"log"
 	"math"
 	"sekretariat/internal/entity/sekretariat"
 	"sekretariat/pkg/errors"
@@ -19,7 +20,11 @@ func (s Service) GetCustomerFiltered(ctx context.Context, company int, keyword s
 			return customers, lastPage, errors.Wrap(err, "[SERVICE][GetCustomerFiltered][COUNT]")
 
 		}
+
+
 		lastPage = int(math.Ceil(float64(count) / float64(length)))
+
+		log.Println("lastPage", lastPage)
 
 		customers, err = s.data.GetCustomerFiltered(ctx, company, keyword, offset, limit)
 		if err != nil {

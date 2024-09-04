@@ -3,6 +3,7 @@ package sekretariat
 import (
 	"context"
 	"fmt"
+	"log"
 	"math"
 	"sekretariat/internal/entity/sekretariat"
 	"sekretariat/pkg/errors"
@@ -15,11 +16,11 @@ func (s Service) GetAllContractsHeader(ctx context.Context, company int, keyword
 	var lastPage int
 
 	if page != 0 && length != 0 {
-		headers, count, err := s.data.GetAllContractsHeaderCount(ctx, company)
+		headers, count, err := s.data.GetAllContractsHeaderCount(ctx, company, keyword)
 		if err != nil {
 			return headers, lastPage, errors.Wrap(err, "[SERVICE][GetAllContractsHeader][COUNT]")
-
 		}
+
 		lastPage = int(math.Ceil(float64(count) / float64(length)))
 
 		headers, err = s.data.GetAllContractsHeaderPage(ctx, company, keyword, offset, limit)
@@ -71,6 +72,32 @@ func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakH
 		return errors.Wrap(err, "[SERVICE][CreateContract][Header]")
 	}
 
+	// log.Println(header.NoKontrak)
+
+	// for _, detail := range header.Details {
+	// 	detail.NoKontrak = header.NoKontrak
+	// 	detail.UpdatedBy = header.UpdatedBy
+
+	// 	if detail.PeriodeAwalString != "" && detail.PeriodeAkhirString != "" {
+	// 		log.Println("detail.PeriodeAwalString", detail.PeriodeAwalString)
+	// 		log.Println("detail.PeriodeAkhirString", detail.PeriodeAkhirString)
+
+	// 		layoutFormat := "01-02-06"
+	// 		_periodeAwal, _ := time.Parse(layoutFormat, detail.PeriodeAwalString)
+	// 		_periodeAkhir, _ := time.Parse(layoutFormat, detail.PeriodeAkhirString)
+
+	// 		log.Println("periodeAwal", _periodeAwal)
+	// 		log.Println("periodeAkhir", _periodeAkhir)
+
+	// 		detail.PeriodeAwal = _periodeAwal
+	// 		detail.PeriodeAkhir = _periodeAkhir
+	// 	}
+
+	// 	err := s.data.CreateContractDetail(ctx, detail)
+	// 	if err != nil {
+	// 		return errors.Wrap(err, "[SERVICE][CreateContract][Detail]")
+	// 	}
+	// }
 	for _, detail := range header.Details {
 		detail.NoKontrak = header.NoKontrak
 		detail.UpdatedBy = header.UpdatedBy

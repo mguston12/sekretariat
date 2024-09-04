@@ -542,15 +542,15 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.Text(140, height, "Pihak Kedua")
 
 	pdf.Text(38, height+5, strings.ToUpper(dataCompany.Name))
-	pdf.SetXY(115, height+1.2)
-	paragraphWidth = 70.0
+	pdf.SetXY(100, height+1.2)
+	paragraphWidth = 100.0
 	text = strings.ToUpper(customer.CustomerName)
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "C", false)
 
 	pdf.SetFont("times", "BU", 10)
 	pdf.Text(45, height+40, dataCompany.PIC)
-	pdf.SetXY(125, height+36.2)
-	paragraphWidth = 50.0
+	pdf.SetXY(115, height+36.2)
+	paragraphWidth = 70.0
 	text = customer.PenandaTangan
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "C", false)
 

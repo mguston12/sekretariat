@@ -61,10 +61,14 @@ const (
 								LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 								LEFT JOIN bank ba ON kh.bank_id = ba.bank_id 
 								LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
-								WHERE kh.company_id = ?`
+								WHERE kh.company_id = ?
+								AND
+									((no_kontrak LIKE ? OR ? = '')
+								OR
+									(cu.nama_customer LIKE ? OR ? = ''))`
 
 	getContractHeaderByContractNumber  = "GetContractHeaderByContractNumber"
-	qGetContractHeaderByContractNumber = `SELECT no_kontrak, tanggal_buat, kh.company_id, kh.id_customer,
+	qGetContractHeaderByContractNumber = `SELECT id_header, no_kontrak, tanggal_buat, kh.company_id, kh.id_customer,
 											cu.nama_customer, cu.alamat, cu.pic, cu.penandatangan, cu.jabatan, cu.no_telp,
 											ba.bank_id, ba.bank_name, ba.nomor_rekening, ba.atas_nama, 
 											p.payment_id, p.paling_lambat, p.melunasi, p.tertunda,
@@ -76,9 +80,12 @@ const (
 											WHERE kh.company_id = ? AND no_kontrak LIKE ?`
 
 	getContractDetailsByContractNumber  = `GetContractDetailsByContractNumber`
-	qGetContractDetailsByContractNumber = `SELECT no_kontrak, quantity, tipe_mesin, speed, harga_sewa, 
+	qGetContractDetailsByContractNumber = `SELECT id_detail, no_kontrak, quantity, tipe_mesin, speed, harga_sewa, 
 										free_copy, over_copy, free_copy_color, over_copy_color, periode_awal, periode_akhir, penempatan,
 										active_yn, updated_by, updated_at FROM kontrak_detail WHERE no_kontrak LIKE ?`
+
+	getContractByNumber  = `GetContractByNumber`
+	qGetContractByNumber = `SELECT no_kontrak FROM kontrak_header WHERE no_kontrak = ?`
 
 	getContractExp30Days  = "GetContractExp30Days"
 	qGetContractExp30Days = `SELECT d.*
@@ -86,9 +93,7 @@ const (
 							JOIN kontrak_header h ON h.no_kontrak = d.no_kontrak
 							WHERE h.company_id = ?
 							AND d.periode_akhir >= DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
-							AND d.periode_akhir < DATE_FORMAT(CURDATE() + INTERVAL 2 MONTH, '%Y-%m-01');
-
-`
+							AND d.periode_akhir < DATE_FORMAT(CURDATE() + INTERVAL 2 MONTH, '%Y-%m-01');`
 
 	createContractHeader  = "CreateContractHeader"
 	qCreateContractHeader = `INSERT INTO kontrak_header(no_kontrak, tanggal_buat, company_id, id_customer, bank_id, payment_id, deposit, denda_satupersenyn, active_yn, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -102,6 +107,7 @@ const (
 	updateContractHeader  = "UpdateContractHeader"
 	qUpdateContractHeader = `UPDATE kontrak_header
 					SET 
+						no_kontrak = COALESCE(NULLIF(?,''), no_kontrak),
 						tanggal_buat = COALESCE(NULLIF(?,''), tanggal_buat), 
 						id_customer = COALESCE(NULLIF(?,''), id_customer), 
 						bank_id = COALESCE(NULLIF(?,''), bank_id), 
@@ -111,7 +117,7 @@ const (
 						active_yn = COALESCE(NULLIF(?,''), active_yn),
 						updated_by = COALESCE(NULLIF(?,''), updated_by)
 					WHERE 
-						no_kontrak = ?`
+						id_header = ?`
 
 	updateContractDetail  = "UpdateContractDetail"
 	qUpdateContractDetail = `UPDATE kontrak_detail
@@ -144,6 +150,9 @@ const (
 
 	getCustomerByID  = "GetCustomerByID"
 	qGetCustomerByID = `SELECT * FROM customer WHERE id_customer = ?`
+
+	getCustomerByNameAndAddress    = "GetCustomerIDByNameAndAddress"
+	qGetCustomerIDByNameAndAddress = `SELECT id_customer FROM customer WHERE nama_customer = ? AND alamat = ?`
 
 	createCustomer  = "CreateCustomer"
 	qCreateCustomer = `INSERT INTO customer(id_customer, company_id, nama_customer, alamat, pic, penandatangan, jabatan, no_telp, updated_by)
@@ -210,13 +219,14 @@ var (
 		{getContractHeaderByContractNumber, qGetContractHeaderByContractNumber},
 		{getContractDetailsByContractNumber, qGetContractDetailsByContractNumber},
 		{getContractExp30Days, qGetContractExp30Days},
+		{getContractByNumber, qGetContractByNumber},
 
 		//Customers
 		{getAllCustomers, qGetAllCustomers},
 		{getCustomerFiltered, qGetCustomerFiltered},
 		{getCustomerFilteredCount, qGetCustomerFilteredCount},
 		{getCustomerByID, qGetCustomerByID},
-
+		{getCustomerByNameAndAddress, qGetCustomerIDByNameAndAddress},
 		//Company
 		{getAllCompanies, qGetAllCompanies},
 		{getCompanyByID, qGetCompanyByID},

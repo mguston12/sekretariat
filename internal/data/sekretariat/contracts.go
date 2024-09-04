@@ -2,6 +2,7 @@ package sekretariat
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"sekretariat/internal/entity/sekretariat"
 
@@ -85,11 +86,13 @@ func (d Data) GetAllContractsHeaderPage(ctx context.Context, company int, keywor
 	return headers, nil
 }
 
-func (d Data) GetAllContractsHeaderCount(ctx context.Context, company int) ([]sekretariat.KontrakHeader, int, error) {
+func (d Data) GetAllContractsHeaderCount(ctx context.Context, company int, keyword string) ([]sekretariat.KontrakHeader, int, error) {
 	headers := []sekretariat.KontrakHeader{}
 	var count int
 
-	if err := d.stmt[getAllContractsHeaderCount].QueryRowxContext(ctx, company).Scan(&count); err != nil {
+	_keyword := "%" + keyword + "%"
+
+	if err := d.stmt[getAllContractsHeaderCount].QueryRowxContext(ctx, company, _keyword, _keyword, _keyword, _keyword).Scan(&count); err != nil {
 		return headers, count, errors.Wrap(err, "[DATA][GetAllContractsHeaderCount]")
 	}
 
@@ -105,6 +108,24 @@ func (d Data) GetContractsHeaderByContractNumber(ctx context.Context, company in
 	}
 
 	return header, nil
+}
+
+func (d Data) GetContractByNumber(ctx context.Context, kontrak string) (bool, error) {
+	var noKontrak string
+
+	// Execute the query with the given contract number
+	err := d.stmt[getContractByNumber].QueryRowContext(ctx, kontrak).Scan(&noKontrak)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// No contract found
+			return false, nil
+		}
+		// Other errors
+		return false, errors.Wrap(err, "[DATA][GetContractByNumber][QUERY_ERROR]")
+	}
+
+	// Contract found
+	return true, nil
 }
 
 func (d Data) GetContractDetailsByContractNumber(ctx context.Context, no_kontrak string) ([]sekretariat.KontrakDetail, error) {
@@ -182,6 +203,7 @@ func (d Data) CreateContractDetail(ctx context.Context, detail sekretariat.Kontr
 func (d Data) UpdateContractHeader(ctx context.Context, header sekretariat.KontrakHeader) error {
 	fmt.Println(header)
 	_, err := d.stmt[updateContractHeader].ExecContext(ctx,
+		header.NoKontrak,
 		header.TanggalBuat,
 		header.CustomerID,
 		header.Bank.ID,
@@ -190,7 +212,7 @@ func (d Data) UpdateContractHeader(ctx context.Context, header sekretariat.Kontr
 		header.DendaSatuPersenYN,
 		header.ActiveYN,
 		header.UpdatedBy,
-		header.NoKontrak)
+		header.IDHeader)
 	if err != nil {
 		return errors.Wrap(err, "[DATA][UpdateContractHeader]")
 	}

@@ -31,6 +31,7 @@ func (s *Server) Handler() *mux.Router {
 	contract.HandleFunc("/print", s.Sekretariat.PrintKontrak).Methods("GET")
 	contract.HandleFunc("/counter", s.Sekretariat.GetCounterContract).Methods("GET")
 	contract.HandleFunc("/expiredsoon", s.Sekretariat.GetContractExp30Days).Methods("GET")
+	contract.HandleFunc("/croncontracts", s.Sekretariat.ImportContractsFromExcel).Methods("GET")
 	contract.HandleFunc("", s.Sekretariat.GetAllContractsHeader).Methods("GET")
 
 	customer := r.PathPrefix("/customers").Subrouter()
