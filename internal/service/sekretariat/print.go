@@ -480,13 +480,13 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	}
 
 	if kontrak.Deposit != 0.00 {
-		text = "Jika Pihak Kedua menghentikan sewa tanpa alasan yang disebutkan, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar biaya " + strconv.Itoa(brandNewYN) + " bulan sewa. Deposit yang sudah dibayarkan hangus tidak dapat dikembalikan."
+		text = "Jika Pihak Kedua menghentikan sewa, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar denda atau penalty sebesar " + strconv.Itoa(brandNewYN) + " bulan sewa. Deposit yang sudah dibayarkan hangus tidak dapat dikembalikan."
 	} else {
-		text = "Jika Pihak Kedua menghentikan sewa tanpa alasan yang disebutkan, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar biaya " + strconv.Itoa(brandNewYN) + " bulan sewa."
+		text = "Jika Pihak Kedua menghentikan sewa, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar denda atau penalty sebesar " + strconv.Itoa(brandNewYN) + " bulan sewa."
 	}
 
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
-	count = count + 3
+	count = count + 2
 	number++
 
 	pdf.SetFont("times", "", 10.5)

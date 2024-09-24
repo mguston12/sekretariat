@@ -13,8 +13,8 @@ import (
 // ImportCustomersFromExcel reads customers from an Excel file and inserts them into the database.
 func (s Service) ImportCustomersFromExcel(ctx context.Context) error {
 
-	filePath := `C:\Users\user\go\src\sekretariat\internal\service\sekretariat\CustomerPBM.xlsx`
-	companyID := 2
+	filePath := `C:\Users\user\go\src\sekretariat\internal\service\sekretariat\CustomerPB.xlsx`
+	companyID := 1
 	// Open  the Excel file
 	f, err := excelize.OpenFile(filePath)
 	if err != nil {
@@ -29,7 +29,7 @@ func (s Service) ImportCustomersFromExcel(ctx context.Context) error {
 	}
 
 	// Read the first sheet
-	rows, err := f.GetRows(sheetNames[1])
+	rows, err := f.GetRows(sheetNames[0])
 	if err != nil {
 		return errors.Wrap(err, "[SERVICE][ImportCustomersFromExcel][GET_ROWS]")
 	}
@@ -50,13 +50,13 @@ func (s Service) ImportCustomersFromExcel(ctx context.Context) error {
 
 		// Assuming columns: ID, Name, Email, etc.
 		customer := sekretariat.Customer{
-			CustomerID:    row[0],
-			CustomerName:  row[1],
-			Address:       row[12],
-			PIC:           row[13],
-			PenandaTangan: row[10],
-			Jabatan:       row[11],
-			NoTelp:        row[14],
+			// CustomerID:    row[0],
+			CustomerName:  row[0],
+			Address:       row[11],
+			PIC:           row[12],
+			PenandaTangan: row[9],
+			Jabatan:       row[10],
+			NoTelp:        row[13],
 			UpdatedBy:     "Admin",
 			CompanyID:     companyID,
 		}
@@ -73,8 +73,8 @@ func (s Service) ImportCustomersFromExcel(ctx context.Context) error {
 
 // ImportCustomersFromExcel reads customers from an Excel file and inserts them into the database.
 func (s Service) ImportContractsFromExcel(ctx context.Context) (interface{}, error) {
-	filePath := `C:\Users\user\go\src\sekretariat\internal\service\sekretariat\CustomerPBM.xlsx`
-	companyID := 2
+	filePath := `C:\Users\user\go\src\sekretariat\internal\service\sekretariat\CustomerPB.xlsx`
+	companyID := 1
 
 	// Open the Excel file
 	f, err := excelize.OpenFile(filePath)
@@ -90,7 +90,7 @@ func (s Service) ImportContractsFromExcel(ctx context.Context) (interface{}, err
 	}
 
 	// Read the first sheet (adjust index as needed)
-	rows, err := f.GetRows(sheetNames[1])
+	rows, err := f.GetRows(sheetNames[2])
 	if err != nil {
 		return filePath, errors.Wrap(err, "[SERVICE][ImportContractsFromExcel][GET_ROWS]")
 	}
@@ -152,6 +152,7 @@ func (s Service) ImportContractsFromExcel(ctx context.Context) (interface{}, err
 			continue
 		}
 
+		log.Println(row[0], row[11])
 		customerID, err := s.data.GetCustomerIDByNameAndAddress(ctx, row[0], row[11])
 		if err != nil {
 			return filePath, errors.Wrap(err, "[SERVICE][ImportContractsFromExcel][GET_CUSTOMER_ID]")
@@ -207,10 +208,10 @@ func (s Service) ImportContractsFromExcel(ctx context.Context) (interface{}, err
 			continue
 		}
 
-		// err = s.CreateContract(ctx, header)
-		// if err != nil {
-		// 	return filePath, errors.Wrap(err, "[SERVICE][ImportContractsFromExcel][CREATE_CONTRACT]")
-		// }
+		err = s.CreateContractCron(ctx, header)
+		if err != nil {
+			return filePath, errors.Wrap(err, "[SERVICE][ImportContractsFromExcel][CREATE_CONTRACT]")
+		}
 	}
 
 	return groupedHeaders, nil

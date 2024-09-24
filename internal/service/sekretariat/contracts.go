@@ -72,32 +72,6 @@ func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakH
 		return errors.Wrap(err, "[SERVICE][CreateContract][Header]")
 	}
 
-	// log.Println(header.NoKontrak)
-
-	// for _, detail := range header.Details {
-	// 	detail.NoKontrak = header.NoKontrak
-	// 	detail.UpdatedBy = header.UpdatedBy
-
-	// 	if detail.PeriodeAwalString != "" && detail.PeriodeAkhirString != "" {
-	// 		log.Println("detail.PeriodeAwalString", detail.PeriodeAwalString)
-	// 		log.Println("detail.PeriodeAkhirString", detail.PeriodeAkhirString)
-
-	// 		layoutFormat := "01-02-06"
-	// 		_periodeAwal, _ := time.Parse(layoutFormat, detail.PeriodeAwalString)
-	// 		_periodeAkhir, _ := time.Parse(layoutFormat, detail.PeriodeAkhirString)
-
-	// 		log.Println("periodeAwal", _periodeAwal)
-	// 		log.Println("periodeAkhir", _periodeAkhir)
-
-	// 		detail.PeriodeAwal = _periodeAwal
-	// 		detail.PeriodeAkhir = _periodeAkhir
-	// 	}
-
-	// 	err := s.data.CreateContractDetail(ctx, detail)
-	// 	if err != nil {
-	// 		return errors.Wrap(err, "[SERVICE][CreateContract][Detail]")
-	// 	}
-	// }
 	for _, detail := range header.Details {
 		detail.NoKontrak = header.NoKontrak
 		detail.UpdatedBy = header.UpdatedBy
@@ -118,6 +92,41 @@ func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakH
 	err = s.data.IncreaseCounterContract(ctx, header.CompanyID)
 	if err != nil {
 		return errors.Wrap(err, "[SERVICE][CreateContract][IncreaseCounter]")
+	}
+
+	return nil
+}
+func (s Service) CreateContractCron(ctx context.Context, header sekretariat.KontrakHeader) error {
+	err := s.data.CreateContractHeader(ctx, header)
+	if err != nil {
+		return errors.Wrap(err, "[SERVICE][CreateContract][Header]")
+	}
+
+	log.Println(header.NoKontrak)
+
+	for _, detail := range header.Details {
+		detail.NoKontrak = header.NoKontrak
+		detail.UpdatedBy = header.UpdatedBy
+
+		if detail.PeriodeAwalString != "" && detail.PeriodeAkhirString != "" {
+			log.Println("detail.PeriodeAwalString", detail.PeriodeAwalString)
+			log.Println("detail.PeriodeAkhirString", detail.PeriodeAkhirString)
+
+			layoutFormat := "2006-01-02"
+			_periodeAwal, _ := time.Parse(layoutFormat, detail.PeriodeAwalString)
+			_periodeAkhir, _ := time.Parse(layoutFormat, detail.PeriodeAkhirString)
+
+			log.Println("periodeAwal", _periodeAwal)
+			log.Println("periodeAkhir", _periodeAkhir)
+
+			detail.PeriodeAwal = _periodeAwal
+			detail.PeriodeAkhir = _periodeAkhir
+		}
+
+		err := s.data.CreateContractDetail(ctx, detail)
+		if err != nil {
+			return errors.Wrap(err, "[SERVICE][CreateContract][Detail]")
+		}
 	}
 
 	return nil
