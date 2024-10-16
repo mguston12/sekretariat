@@ -74,6 +74,7 @@ func (d Data) CreateBank(ctx context.Context, bank sekretariat.Bank) error {
 		bank.Name,
 		bank.Norek,
 		bank.AtasNama,
+		bank.CompanyID,
 	)
 
 	if err != nil {

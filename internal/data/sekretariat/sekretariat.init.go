@@ -189,8 +189,8 @@ const (
 	qGetBankByCompanyID = `SELECT * FROM bank WHERE company_id = ?`
 
 	createBank  = "CreateBank"
-	qCreateBank = `INSERT INTO bank(bank_name, nomor_rekening, atas_nama)
-						VALUES(?,?,?)`
+	qCreateBank = `INSERT INTO bank(bank_name, nomor_rekening, atas_nama, company_id)
+						VALUES(?,?,?,?)`
 
 	updateBank  = "UpdateBank"
 	qUpdateBank = `UPDATE bank

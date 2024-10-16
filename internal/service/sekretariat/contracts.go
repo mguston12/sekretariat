@@ -67,6 +67,8 @@ func (s Service) GetContractExp30Days(ctx context.Context, company int) ([]sekre
 }
 
 func (s Service) CreateContract(ctx context.Context, header sekretariat.KontrakHeader) error {
+
+	log.Println("data input", header)
 	err := s.data.CreateContractHeader(ctx, header)
 	if err != nil {
 		return errors.Wrap(err, "[SERVICE][CreateContract][Header]")

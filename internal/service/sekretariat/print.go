@@ -224,10 +224,10 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	freeCopyBW, overCopyBW, freeCopyColor, overCopyColor := "", "", "", ""
 
 	if kontrak.Details[0].FreeCopy != "" && kontrak.Details[0].FreeCopy != "0" {
-		freeCopyBW = ", Free Copy " + kontrak.Details[0].FreeCopy
+		freeCopyBW = ", Free Copy BW " + kontrak.Details[0].FreeCopy
 	}
 	if kontrak.Details[0].OverCopy != "" && kontrak.Details[0].OverCopy != "0" {
-		overCopyBW = ", Over Copy " + kontrak.Details[0].OverCopy
+		overCopyBW = ", Over Copy BW " + kontrak.Details[0].OverCopy
 	}
 	if kontrak.Details[0].FreeCopyColor != "" && kontrak.Details[0].FreeCopyColor != "0" {
 		freeCopyColor = ", Free Copy Color " + kontrak.Details[0].FreeCopyColor
@@ -481,6 +481,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 
 	if kontrak.Deposit != 0.00 {
 		text = "Jika Pihak Kedua menghentikan sewa, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar denda atau penalty sebesar " + strconv.Itoa(brandNewYN) + " bulan sewa. Deposit yang sudah dibayarkan hangus tidak dapat dikembalikan."
+		count += 1
 	} else {
 		text = "Jika Pihak Kedua menghentikan sewa, harus memberi pemberitahuan 1 bulan sebelumnya dan membayar denda atau penalty sebesar " + strconv.Itoa(brandNewYN) + " bulan sewa."
 	}
