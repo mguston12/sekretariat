@@ -41,8 +41,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	initialY := 0.0
 
 	if kontrak.CompanyID == 3 || kontrak.CompanyID == 2 {
-		pdf.SetXY(25, 30)
-		initialY = pdf.GetY() + 5.0
+		pdf.SetXY(25, 33)
 	} else {
 		pdf.SetXY(25, 25)
 	}
@@ -158,7 +157,7 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.Text(26, height+10.2, "3.")
 	pdf.SetXY(32, height+6.5)
 	paragraphWidth = 159.0
-	text = "Sisa bahan pakai dan suku cabang bekas tetap milik Pihak Pertama."
+	text = "Sisa bahan pakai dan suku cadang bekas tetap milik Pihak Pertama."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 
 	height = height + 16
@@ -408,22 +407,27 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 		periodeAkhirString = strings.Replace(periodeAkhirString, enMonth, idMonth, -1)
 	}
 
-	startYear, startMonth, _ := kontrak.Details[0].PeriodeAwal.Date()
-	endYear, endMonth, _ := kontrak.Details[0].PeriodeAkhir.Date()
+	startYear, startMonth, startDay := kontrak.Details[0].PeriodeAwal.Date()
+	endYear, endMonth, endDay := kontrak.Details[0].PeriodeAkhir.Date()
 
-	// Calculate the difference in years and months.
+	// Hitung selisih tahun dan bulan
 	yearDiff := endYear - startYear
 	monthDiff := int(endMonth) - int(startMonth)
 
-	// Total month difference
+	// Total selisih bulan
 	totalMonthDiff := yearDiff*12 + monthDiff
+
+	// Jika Anda ingin memastikan selisih ini tetap 12
+	if startDay < endDay {
+		totalMonthDiff += 1
+	}
 
 	pdf.SetFont("times", "", 10.5)
 	pdf.Text(26, height_number, strconv.Itoa(number)+".")
 	pdf.SetXY(32, height_text)
 	paragraphWidth = 159.0
 	terbilangMonthDiff := numberToWords(totalMonthDiff)
-	text = "Pihak Kedua menyewa Mesin fotocopy kepada Pihak Pertama dengan jangka waktu sewa adalah " + strconv.Itoa(totalMonthDiff) + " (" + terbilangMonthDiff + ")" + " bulan, terhitung sejak " + periodeAwalString + " hingga " + periodeAkhirString + "."
+	text = "Pihak Kedua menyewa Mesin Printer Multifunction kepada Pihak Pertama dengan jangka waktu sewa adalah " + strconv.Itoa(totalMonthDiff) + " (" + terbilangMonthDiff + ")" + " bulan, terhitung sejak " + periodeAwalString + " hingga " + periodeAkhirString + "."
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 	count = count + 2
 	number++

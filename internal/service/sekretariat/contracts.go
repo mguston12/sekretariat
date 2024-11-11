@@ -206,6 +206,8 @@ func (s Service) GetCounterContract(ctx context.Context, company int) (string, e
 		month = "XI"
 	case 12:
 		month = "XII"
+	default:
+		month = ""
 	}
 
 	id, err := s.data.GetCounterContract(ctx, company)
