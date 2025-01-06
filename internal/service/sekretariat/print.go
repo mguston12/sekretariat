@@ -40,6 +40,32 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.AddPage()
 	initialY := 0.0
 
+	// if kontrak.CompanyID == 3 {
+	// 	imgKOP := "internal/img/PT. MARS MAX UTAMA.png"
+	// 	// Check if the image file exists
+	// 	if _, err := os.Stat(imgKOP); os.IsNotExist(err) {
+	// 		log.Fatalf("Image file not found: %v", err)
+	// 	}
+
+	// 	pdf.Image(imgKOP, 13, 5, 180, 0, false, "", 0, "")
+
+	// 	pdf.Ln(40) // Adjust based on your image h
+
+	// 	pdf.Ln(40)
+
+	// 	imgAddress := "internal/img/Alamat.png"
+	// 	// Check if the image file exists
+	// 	if _, err := os.Stat(imgAddress); os.IsNotExist(err) {
+	// 		log.Fatalf("Image file not found: %v", err)
+	// 	}
+
+	// 	pdf.Image(imgAddress, 3, 260, 200, 0, false, "", 0, "")
+
+	// 	pdf.Ln(40) // Adjust based on your image h
+
+	// 	pdf.Ln(40)
+	// }
+
 	if kontrak.CompanyID == 3 || kontrak.CompanyID == 2 {
 		pdf.SetXY(25, 33)
 	} else {
@@ -337,7 +363,12 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.Text(26, height_number+count*4.5, strconv.Itoa(number)+".")
 	pdf.SetXY(32, height_text+count*4.5)
 	paragraphWidth = 159.0
-	text = "Jika pembayaran tertunda lebih dari " + strconv.Itoa(kontrak.Tertunda) + " hari, Mesin bisa dikunci oleh Pihak Pertama. Setelah 60 hari, Mesin dapat ditarik oleh Pihak Pertama dan Pihak Kedua wajib membayar semua tagihan dan denda."
+	if kontrak.DendaSatuPersenYN == "Y" {
+		text = "Jika pembayaran tertunda lebih dari " + strconv.Itoa(kontrak.Tertunda) + " hari, Mesin bisa dikunci oleh Pihak Pertama. Setelah 60 hari, Mesin dapat ditarik oleh Pihak Pertama dan Pihak Kedua wajib membayar semua tagihan dan denda."
+	} else {
+		text = "Jika pembayaran tertunda lebih dari " + strconv.Itoa(kontrak.Tertunda) + " hari, Mesin bisa dikunci oleh Pihak Pertama. Setelah 60 hari, Mesin dapat ditarik oleh Pihak Pertama dan Pihak Kedua wajib membayar semua tagihan."
+	}
+
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "J", false)
 	count = count + 2
 	number++
@@ -554,8 +585,8 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 
 	pdf.SetFont("times", "BU", 10)
 	pdf.Text(45, height+40, dataCompany.PIC)
-	pdf.SetXY(115, height+36.2)
-	paragraphWidth = 70.0
+	pdf.SetXY(110, height+36.2)
+	paragraphWidth = 80.0
 	text = customer.PenandaTangan
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "C", false)
 

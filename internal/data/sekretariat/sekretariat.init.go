@@ -34,7 +34,7 @@ const (
 							LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 							LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
 							LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
-							WHERE kh.company_id = ?
+							WHERE kh.company_id = ? AND kh.active_yn = 'Y'
 							AND
 	 							((no_kontrak LIKE ? OR ? = '')
 	 						OR
@@ -50,7 +50,7 @@ const (
 								LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 								LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
 								LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
-								WHERE kh.company_id = ?
+								WHERE kh.company_id = ? AND kh.active_yn = 'Y'
 								AND
 									((no_kontrak LIKE ? OR ? = '')
 								OR
@@ -61,7 +61,7 @@ const (
 								LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 								LEFT JOIN bank ba ON kh.bank_id = ba.bank_id 
 								LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
-								WHERE kh.company_id = ?
+								WHERE kh.company_id = ? AND kh.active_yn = 'Y'
 								AND
 									((no_kontrak LIKE ? OR ? = '')
 								OR
@@ -77,7 +77,7 @@ const (
 											LEFT JOIN customer cu ON kh.id_customer = cu.id_customer
 											LEFT JOIN bank ba ON kh.bank_id = ba.bank_id
 											LEFT JOIN payment_method p ON p.payment_id = kh.payment_id
-											WHERE kh.company_id = ? AND no_kontrak LIKE ?`
+											WHERE kh.company_id = ? AND no_kontrak LIKE ? AND kh.active_yn = 'Y'`
 
 	getContractDetailsByContractNumber  = `GetContractDetailsByContractNumber`
 	qGetContractDetailsByContractNumber = `SELECT id_detail, no_kontrak, quantity, tipe_mesin, speed, harga_sewa, 
