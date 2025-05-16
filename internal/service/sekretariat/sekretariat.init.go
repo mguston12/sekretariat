@@ -25,6 +25,7 @@ type Data interface {
 	DeleteContractDetail(ctx context.Context, kontrak string) error
 
 	// Customer
+	GetCustomer(ctx context.Context, keyword string) ([]sekretariat.Customer, error)
 	GetAllCustomers(ctx context.Context, company int) ([]sekretariat.Customer, error)
 	GetCustomerIDByNameAndAddress(ctx context.Context, name, address string) (string, error)
 	GetCustomerFiltered(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.Customer, error)

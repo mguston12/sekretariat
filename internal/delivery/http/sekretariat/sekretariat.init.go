@@ -24,6 +24,7 @@ type SekretariatSvc interface {
 	GetAllCompanies(ctx context.Context) ([]sekretariat.Company, error)
 
 	// Customer
+	GetCustomer(ctx context.Context, keyword string) ([]sekretariat.Customer, error)
 	GetCustomerFiltered(ctx context.Context, company int, keyword string, page, length int) ([]sekretariat.Customer, int, error)
 	CreateCustomer(ctx context.Context, customer sekretariat.Customer) error
 	UpdateCustomer(ctx context.Context, customer sekretariat.Customer) error

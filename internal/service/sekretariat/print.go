@@ -584,7 +584,11 @@ func (s Service) PrintKontrak(ctx context.Context, company int, no_kontrak strin
 	pdf.MultiCell(paragraphWidth, 4.5, text, "", "C", false)
 
 	pdf.SetFont("times", "BU", 10)
-	pdf.Text(45, height+40, dataCompany.PIC)
+	if dataCompany.ID == 3 {
+		pdf.Text(40, height+40, dataCompany.PIC)
+	} else {
+		pdf.Text(45, height+40, dataCompany.PIC)
+	}
 	pdf.SetXY(110, height+36.2)
 	paragraphWidth = 80.0
 	text = customer.PenandaTangan

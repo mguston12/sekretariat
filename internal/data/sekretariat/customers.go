@@ -34,6 +34,33 @@ func (d Data) GetAllCustomers(ctx context.Context, company int) ([]sekretariat.C
 	return datas, nil
 }
 
+func (d Data) GetCustomer(ctx context.Context, keyword string) ([]sekretariat.Customer, error) {
+	var (
+		rows  *sqlx.Rows
+		datas []sekretariat.Customer
+		err   error
+	)
+
+	_keyword := "%" + keyword + "%"
+
+	rows, err = d.stmt[getCustomer].QueryxContext(ctx, _keyword, _keyword)
+	if err != nil {
+		return datas, errors.Wrap(err, "[DATA][GetCustomer]")
+	}
+
+	for rows.Next() {
+		var data sekretariat.Customer
+		err := rows.StructScan(&data)
+		if err != nil {
+			return datas, errors.Wrap(err, "[DATA][GetCustomer]")
+		}
+		datas = append(datas, data)
+	}
+	defer rows.Close()
+
+	return datas, nil
+}
+
 func (d Data) GetCustomerFiltered(ctx context.Context, company int, keyword string, offset, limit int) ([]sekretariat.Customer, error) {
 	var (
 		rows  *sqlx.Rows

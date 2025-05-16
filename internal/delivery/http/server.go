@@ -25,6 +25,7 @@ type SekretariatHandler interface {
 
 	// Customer
 	GetCustomerFiltered(w http.ResponseWriter, r *http.Request)
+	GetCustomer(w http.ResponseWriter, r *http.Request)
 	CreateCustomer(w http.ResponseWriter, r *http.Request)
 	UpdateCustomer(w http.ResponseWriter, r *http.Request)
 	ImportCustomersFromExcel(w http.ResponseWriter, r *http.Request)

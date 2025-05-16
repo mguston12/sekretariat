@@ -38,6 +38,14 @@ func (s Service) GetCustomerFiltered(ctx context.Context, company int, keyword s
 	return customers, lastPage, nil
 }
 
+func (s Service) GetCustomer(ctx context.Context, keyword string) ([]sekretariat.Customer, error) {
+	customer, err := s.data.GetCustomer(ctx, keyword)
+	if err != nil {
+		return customer, errors.Wrap(err, "[SERVICE][GetCustomer]")
+	}
+	return customer, nil
+}
+
 func (s Service) GetCustomerByID(ctx context.Context, id string) (sekretariat.Customer, error) {
 	customer, err := s.data.GetCustomerByID(ctx, id)
 	if err != nil {

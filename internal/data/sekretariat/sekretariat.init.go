@@ -131,6 +131,9 @@ const (
 	qDeleteContractDetail = `DELETE FROM kontrak_detail WHERE no_kontrak = ?`
 
 	// Customers
+	getCustomer  = "GetCustomer"
+	qGetCustomer = `SELECT * FROM customer WHERE (nama_customer LIKE ? OR ? = '')`
+
 	getAllCustomers  = "GetAllCustomers"
 	qGetAllCustomers = `SELECT * FROM customer WHERE company_id = ?`
 
@@ -227,6 +230,7 @@ var (
 		{getCustomerFilteredCount, qGetCustomerFilteredCount},
 		{getCustomerByID, qGetCustomerByID},
 		{getCustomerByNameAndAddress, qGetCustomerIDByNameAndAddress},
+		{getCustomer, qGetCustomer},
 		//Company
 		{getAllCompanies, qGetAllCompanies},
 		{getCompanyByID, qGetCompanyByID},

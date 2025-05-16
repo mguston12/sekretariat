@@ -39,6 +39,28 @@ func (h *Handler) GetCustomerFiltered(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
 }
 
+func (h *Handler) GetCustomer(w http.ResponseWriter, r *http.Request) {
+	var (
+		result interface{}
+		err    error
+		resp   response.Response
+	)
+	defer resp.RenderJSON(w, r)
+
+	ctx := r.Context()
+	result, err = h.sekretariatSvc.GetCustomer(ctx, r.FormValue("keyword"))
+
+	if err != nil {
+		resp = httpHelper.ParseErrorCode(err.Error())
+		log.Printf("[ERROR][%s][%s] %s | Reason: %s", r.RemoteAddr, r.Method, r.URL, err.Error())
+		return
+	}
+
+	resp.Data = result
+
+	log.Printf("[INFO][%s][%s] %s", r.RemoteAddr, r.Method, r.URL)
+}
+
 func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	resp := response.Response{}
 	defer resp.RenderJSON(w, r)
